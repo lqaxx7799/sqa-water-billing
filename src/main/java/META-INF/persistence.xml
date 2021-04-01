@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+	<persistence-unit name="sqa-water-billing">
+		<class>web.model.Account</class>
+		<class>web.model.Address</class>
+		<class>web.model.Area</class>
+		<class>web.model.Customer</class>
+		<class>web.model.Employee</class>
+		<class>web.model.Manager</class>
+		<class>web.model.Payment</class>
+		<class>web.model.WaterBill</class>
+		<class>web.model.WaterMeter</class>
+		<class>web.model.WaterMeterReading</class>
+	</persistence-unit>
+</persistence>
