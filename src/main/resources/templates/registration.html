@@ -9,7 +9,7 @@
     </head>
     <body>
         <div th:fragment="content">
-            <form th:action="@{/authentication/signUp}" method="post" th:object="${registrationDTO}">
+            <form th:action="@{/authentication/registration}" method="post" th:object="${registrationDTO}">
             	<div class="is-size-2">Đăng ký tài khoản</div>
             	<div class="is-size-4 my-2">Thông tin tài khoản</div>
             	<div class="columns">
@@ -141,7 +141,7 @@
   							<label class="label">Thành phố/Tỉnh</label>
   							<div class="control">
     							<div class="select">
-      								<select th:field="*{provinceId}">
+      								<select th:field="*{provinceId}" id="sltProvince">
       									<option th:each="province: ${provinces}" th:value="${province.id}" th:text="${province.provinceName}"></option>
     								</select>
     							</div>
@@ -153,7 +153,8 @@
   							<label class="label">Quận</label>
   							<div class="control">
     							<div class="select">
-      								<select th:field="*{districtId}">
+      								<select th:field="*{districtId}" id="sltDistrict">
+      									<option th:each="district: ${districts}" th:value="${district.id}" th:text="${district.districtName}"></option>
     								</select>
     							</div>
   							</div>
@@ -164,7 +165,8 @@
   							<label class="label">Phường</label>
   							<div class="control">
     							<div class="select">
-      								<select th:field="*{wardId}">
+      								<select th:field="*{wardId}" id="sltWard">
+      									<option th:each="ward: ${wards}" th:value="${ward.id}" th:text="${ward.wardName}"></option>
     								</select>
     							</div>
   							</div>
@@ -180,6 +182,44 @@
   					</div>
 				</div>
             </form>
+            <script th:inline="javascript">
+            	$(document).ready(function() {
+            		$(document).on('change', '#sltProvince', function(e) {
+            			$('#sltDistrict').empty();
+            			$('#sltWard').empty();
+            			
+            			const selectedProvince = this.value;
+            			$.ajax({
+            				url: '/district/getByProvinceId?provinceId=' + selectedProvince,
+            				type: 'get',
+            				success: function(result) {
+            					let html = '';
+            					result.forEach(district => {
+            						html += `<option value='${district.id}'>${district.districtName}</option>`
+            					});
+            					$('#sltDistrict').html(html);
+            				},
+            			});
+            		});
+            		
+            		$(document).on('change', '#sltDistrict', function(e) {
+            			$('#sltWard').empty();
+            			
+            			const selectedDistrict = this.value;
+            			$.ajax({
+            				url: '/ward/getByDistrictId?districtId=' + selectedDistrict,
+            				type: 'get',
+            				success: function(result) {
+            					let html = '';
+            					result.forEach(ward => {
+            						html += `<option value='${ward.id}'>${ward.wardName}</option>`
+            					});
+            					$('#sltWard').html(html);
+            				},
+            			});
+            		});
+            	});
+            </script>
         </div>
     </body>
 </html>

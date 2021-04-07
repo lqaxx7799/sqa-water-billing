@@ -2,6 +2,10 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.List;
 
 
@@ -24,6 +28,7 @@ public class Ward implements Serializable {
 
 	//bi-directional many-to-one association to Address
 	@OneToMany(mappedBy="tblWard")
+	@JsonBackReference
 	private List<Address> tblAddresses;
 
 	//bi-directional many-to-one association to AssignedArea
@@ -32,11 +37,13 @@ public class Ward implements Serializable {
 
 	//bi-directional many-to-many association to Employee
 	@ManyToMany(mappedBy="tblWards")
+	@JsonBackReference
 	private List<Employee> tblEmployees;
 
 	//bi-directional many-to-one association to District
 	@ManyToOne
 	@JoinColumn(name="tbl_district_id")
+	@JsonManagedReference
 	private District tblDistrict;
 
 	public Ward() {

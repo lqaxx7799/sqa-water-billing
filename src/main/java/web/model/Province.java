@@ -2,6 +2,9 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.List;
 
 
@@ -24,6 +27,7 @@ public class Province implements Serializable {
 
 	//bi-directional many-to-one association to District
 	@OneToMany(mappedBy="tblProvince")
+	@JsonBackReference
 	private List<District> tblDistricts;
 
 	public Province() {

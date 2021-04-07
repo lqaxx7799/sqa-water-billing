@@ -2,6 +2,8 @@ package web.dto;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class RegistrationDTO {
 	private String email;
 	private String password;
@@ -11,6 +13,7 @@ public class RegistrationDTO {
 	private String idNumber;
 	private String phoneNumber;
 	private String gender;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 	private int addressTypeId;
 	private String street;
