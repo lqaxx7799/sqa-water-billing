@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:include="layout :: page">
+    <head>
+        <title>
+        	<th:block th:fragment="titleName">Home</th:block>
+        </title>
+    </head>
+    <body>
+        <div th:fragment="content">
+    		<div class="is-size-2">Xem số nước:</div>
+            <form class="form" id="formSelectArea" method="post" th:action="@{/reading/list}">
+           		<div class="field">
+				  	<label class="label">Vui lòng chọn khu vực bạn muốn xem:</label>
+				  	<div class="control">
+				    	<div class="select">
+				      		<select name="areaId">
+			            		<th:block th:each="area: ${assignedAreas}">
+			            			<option th:value="${area.id}" th:text="${area.wardName}" />
+			            		</th:block>
+			            	</select>
+				    	</div>
+				  	</div>
+				</div>
+            	
+            	<div class="field is-grouped">
+  					<div class="control">
+    					<button class="button is-link" type="submit">Tìm kiếm</button>
+  					</div>	
+				</div>
+            </form>
+            <th:block th:if="${readings != null && #lists.size(readings) != 0}">
+            	<div id="lblIsTouched" style="display: none;"><span class="tag is-info">Đã chỉnh sửa</span></div>
+            	<table class="table">
+            		<thead>
+            			<tr>
+            				<th>STT</th>
+            				<th>Mã số đồng hồ</th>
+            				<th>Tên khách hàng</th>
+            				<th>Địa chị</th>
+            				<th>Chỉ số kỳ trước</th>
+            				<th>Chỉ số kỳ sau</th>
+            				<th>Chỉ số tiêu thụ</th>
+            			</tr>
+            		</thead>
+            		<tbody>
+            			<tr class="readingRow" th:each="reading, iter: ${readings}" th:attr="data-waterMeterId=${reading.waterMeter.id}">
+            				<td th:text="${iter.index}" />
+            				<td th:text="${reading.waterMeter.id}" />
+            				<td th:text="${reading.customer.firstName}" />
+            				<td th:text="${reading.address.houseNumber}" />
+            				<td th:text="${reading.previousReading.readingValue}" />
+            				<td
+            					class="column-current-reading"
+            					data-state="view"
+            					th:attr="data-waterMeterId=${reading.waterMeter.id}"
+            					th:text="${reading.currentReading.readingValue}"
+           					/>
+            				<td
+            					th:text="${reading.currentReading.readingValue} ? ${reading.currentReading.readingValue - reading.previousReading.readingValue} : 0"
+            				/>
+            			</tr>
+            		</tbody>
+            	</table>
+            	<button id="btnSubmit" type="button" class="button is-primary">Cập nhật</button>
+            	<button id="btnCancel" type="button" class="button is-light">Hủy</button>
+            </th:block>
+            
+	        <script th:inline="javascript">
+	        	let isTouched = false;
+	        	$(document).ready(function() {
+	        		$(document).on('click', '.column-current-reading', function(e) {
+	        			const state = $(this).attr('data-state');
+	        			const waterMeterId = $(this).attr('data-waterMeterId');
+	        			if (state === 'view') {
+	        				const value = $(this).text();
+	        				const html = `
+	        					<input class='input-current input' value='${value}' data-waterMeterId='${waterMeterId}' />
+	        				`;
+	        				$(this).html(html);
+	        				$(this).attr('data-state', 'edit');
+	        			}
+	        		});
+	        		
+	        		$(document).on('keydown', '.input-current', function(e) {
+	        			if (e.keyCode !== 13) {
+	        				return;
+	        			}
+	        			const waterMeterId = $(this).attr('data-waterMeterId');
+	        			const value = $(this).val();
+	        			const targetElem = $(`td[data-waterMeterId='${waterMeterId}']`);
+	        			targetElem.text(value);
+	        			targetElem.attr('data-state', 'view');
+	        			isTouched = true;
+	        			$('#lblIsTouched').css('display', 'block');
+        			});
+	        		
+	        		$(document).on('click', '#btnSubmit', function(e) {
+	        			if (!isTouched) {
+	        				toastr['warning']('Không có thay đổi!');
+	        				return;
+	        			}
+	        			const data = [];
+	        			$('.readingRow').each(function(index) {
+	        				const waterMeterId = parseInt($(this).attr('data-waterMeterId'));
+	        				const readingValue = parseInt($(this).find('.column-current-reading').text());
+	        				data.push({
+	        					waterMeterId,
+	        					readingValue,
+        					});
+	        			});
+	        			$.ajax({
+	        				type: 'POST',
+	        				url: '/reading/update',
+	    					data: JSON.stringify(data),
+	    	                contentType: 'application/json; charset=utf-8',
+	    	                processData: false,
+	    	                success: function(res) {
+	    	                	console.log(res)
+	    	                	toastr.success('Cập nhật số nước thành công.')
+	    	                },
+	    	                error: function(res) {
+	    	                	toastr.error('Có lỗi đã xảy ra trong quá trình cập nhật. Xin vui lòng thử lại sau.');
+	    	                },
+	        			});
+	        		});
+	        	});
+	        </script>
+        </div>
+    </body>
+</html>

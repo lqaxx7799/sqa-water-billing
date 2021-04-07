@@ -63,14 +63,14 @@
 				<div class="navbar-item">
 					<th:block th:if="${session.email == null}">
 						<div class="buttons">
-							<a class="button is-primary" th:href="@{/authentication/registration}"><strong>Đăng ký</strong></a> 
-							<a class="button is-light" th:href="@{/authentication/logIn}">Đăng nhập</a>
+							<a class="button is-primary" th:href="@{/authentication/signUp}"><strong>Sign up</strong></a> 
+							<a class="button is-light" th:href="@{/authentication/logIn}">Log In</a>
 						</div>
 					</th:block>
 					<th:block th:if="${session.email != null}">
-						<div style="margin-right: 10px;" th:text="${'Xin chào, ' + session.email}" />
+						<div style="margin-right: 10px;" th:text="${'Hello, ' + session.email}" />
 						<div class="buttons">
-							<a class="button is-light" th:href="@{/authentication/logOut}">Đăng xuất</a>
+							<a class="button is-light" th:href="@{/authentication/logOut}">Log out</a>
 						</div>
 					</th:block>
 				</div>
