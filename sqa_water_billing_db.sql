@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2021 at 06:37 PM
+-- Generation Time: Apr 07, 2021 at 11:39 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -24,14 +24,41 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hibernate_sequence`
+--
+
+CREATE TABLE `hibernate_sequence` (
+  `next_val` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `hibernate_sequence`
+--
+
+INSERT INTO `hibernate_sequence` (`next_val`) VALUES
+(2);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_account`
 --
 
 CREATE TABLE `tbl_account` (
   `id` int(10) NOT NULL,
   `email` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
-  `password` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL
+  `password` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
+  `created_at` date NOT NULL,
+  `role` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_account`
+--
+
+INSERT INTO `tbl_account` (`id`, `email`, `password`, `created_at`, `role`) VALUES
+(1, 'qanh@gmail.com', '7ce0359f12857f2a90c7de465f40a95f01cb5da9', '2021-04-06', 'EMPLOYEE'),
+(2, 'anna@gmail.com', '7ce0359f12857f2a90c7de465f40a95f01cb5da9', '2021-04-06', 'CUSTOMER');
 
 -- --------------------------------------------------------
 
@@ -43,24 +70,36 @@ CREATE TABLE `tbl_address` (
   `id` int(10) NOT NULL,
   `house_number` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
   `street` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
-  `province` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
-  `city` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
-  `country` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
-  `tbl_area_id` int(10) NOT NULL
+  `tbl_customer_id` int(10) NOT NULL,
+  `tbl_address_type_id` int(10) NOT NULL,
+  `tbl_ward_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_address`
+--
+
+INSERT INTO `tbl_address` (`id`, `house_number`, `street`, `tbl_customer_id`, `tbl_address_type_id`, `tbl_ward_id`) VALUES
+(1, '100', 'Đặng Văn Ngữ', 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_area`
+-- Table structure for table `tbl_address_type`
 --
 
-CREATE TABLE `tbl_area` (
+CREATE TABLE `tbl_address_type` (
   `id` int(10) NOT NULL,
-  `province` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
-  `city` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
-  `country` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL
+  `type` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
+  `description` varchar(256) COLLATE utf8_vietnamese_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_address_type`
+--
+
+INSERT INTO `tbl_address_type` (`id`, `type`, `description`) VALUES
+(1, 'Hộ gia đình', 'Hộ gia đình');
 
 -- --------------------------------------------------------
 
@@ -70,8 +109,16 @@ CREATE TABLE `tbl_area` (
 
 CREATE TABLE `tbl_assigned_area` (
   `tbl_employee_id` int(10) NOT NULL,
-  `tbl_area_id` int(10) NOT NULL
+  `tbl_ward_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_assigned_area`
+--
+
+INSERT INTO `tbl_assigned_area` (`tbl_employee_id`, `tbl_ward_id`) VALUES
+(1, 1),
+(1, 2);
 
 -- --------------------------------------------------------
 
@@ -92,16 +139,32 @@ CREATE TABLE `tbl_customer` (
   `tbl_account_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
 
+--
+-- Dumping data for table `tbl_customer`
+--
+
+INSERT INTO `tbl_customer` (`id`, `first_name`, `last_name`, `phone_number`, `date_of_birth`, `gender`, `id_number`, `created_at`, `is_verified`, `tbl_account_id`) VALUES
+(1, 'Anna', 'Bell', '0123456789', '1999-10-23', 'female', '01232323232', '2021-04-06', 1, 2);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_customer_address`
+-- Table structure for table `tbl_district`
 --
 
-CREATE TABLE `tbl_customer_address` (
-  `tbl_customer_id` int(10) NOT NULL,
-  `tbl_address_id` int(10) NOT NULL
+CREATE TABLE `tbl_district` (
+  `id` int(10) NOT NULL,
+  `district_name` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
+  `tbl_province_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_district`
+--
+
+INSERT INTO `tbl_district` (`id`, `district_name`, `tbl_province_id`) VALUES
+(1, 'Quận Đống Đa', 1),
+(2, 'Quận Thanh Xuân', 1);
 
 -- --------------------------------------------------------
 
@@ -119,6 +182,13 @@ CREATE TABLE `tbl_employee` (
   `salary` float DEFAULT NULL,
   `tbl_account_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_employee`
+--
+
+INSERT INTO `tbl_employee` (`id`, `first_name`, `last_name`, `phone_number`, `created_at`, `is_working`, `salary`, `tbl_account_id`) VALUES
+(1, 'Quốc Anh', 'Lâm', '0976176490', '2021-04-06', 1, 1000, 1);
 
 -- --------------------------------------------------------
 
@@ -154,6 +224,62 @@ CREATE TABLE `tbl_payment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_pricing`
+--
+
+CREATE TABLE `tbl_pricing` (
+  `id` int(10) NOT NULL,
+  `unit_price` float NOT NULL,
+  `tbl_address_type_id` int(10) NOT NULL,
+  `applied_from` date NOT NULL,
+  `applied_to` date DEFAULT NULL,
+  `usage_range_from` float DEFAULT NULL,
+  `usage_range_to` float DEFAULT NULL,
+  `is_applying` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_province`
+--
+
+CREATE TABLE `tbl_province` (
+  `id` int(10) NOT NULL,
+  `province_name` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_province`
+--
+
+INSERT INTO `tbl_province` (`id`, `province_name`) VALUES
+(1, 'Thành phố Hà Nội'),
+(2, 'Tỉnh Nam Định');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_ward`
+--
+
+CREATE TABLE `tbl_ward` (
+  `id` int(10) NOT NULL,
+  `ward_name` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
+  `tbl_district_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_ward`
+--
+
+INSERT INTO `tbl_ward` (`id`, `ward_name`, `tbl_district_id`) VALUES
+(1, 'Phường Nam Đồng', 1),
+(2, 'Phường Thành Công', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_water_bill`
 --
 
@@ -181,6 +307,13 @@ CREATE TABLE `tbl_water_meter` (
   `is_active` tinyint(1) NOT NULL,
   `tbl_address_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_water_meter`
+--
+
+INSERT INTO `tbl_water_meter` (`id`, `installed_date`, `maximum_reading`, `expired_date`, `is_active`, `tbl_address_id`) VALUES
+(1, '2021-01-01', 10000, '2021-07-01', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -214,21 +347,24 @@ ALTER TABLE `tbl_account`
 --
 ALTER TABLE `tbl_address`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FKtbl_addres380877` (`tbl_area_id`);
+  ADD KEY `FKtbl_addres888450` (`tbl_customer_id`),
+  ADD KEY `FKtbl_addres438927` (`tbl_address_type_id`),
+  ADD KEY `FKtbl_addres871841` (`tbl_ward_id`);
 
 --
--- Indexes for table `tbl_area`
+-- Indexes for table `tbl_address_type`
 --
-ALTER TABLE `tbl_area`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `tbl_address_type`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `type` (`type`);
 
 --
 -- Indexes for table `tbl_assigned_area`
 --
 ALTER TABLE `tbl_assigned_area`
-  ADD PRIMARY KEY (`tbl_employee_id`,`tbl_area_id`),
+  ADD PRIMARY KEY (`tbl_employee_id`,`tbl_ward_id`),
   ADD KEY `FKtbl_assign664065` (`tbl_employee_id`),
-  ADD KEY `FKtbl_assign695092` (`tbl_area_id`);
+  ADD KEY `FKtbl_assign23779` (`tbl_ward_id`);
 
 --
 -- Indexes for table `tbl_customer`
@@ -239,12 +375,11 @@ ALTER TABLE `tbl_customer`
   ADD KEY `FKtbl_custom195669` (`tbl_account_id`);
 
 --
--- Indexes for table `tbl_customer_address`
+-- Indexes for table `tbl_district`
 --
-ALTER TABLE `tbl_customer_address`
-  ADD PRIMARY KEY (`tbl_customer_id`,`tbl_address_id`),
-  ADD KEY `FKtbl_custom331234` (`tbl_customer_id`),
-  ADD KEY `FKtbl_custom140314` (`tbl_address_id`);
+ALTER TABLE `tbl_district`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FKtbl_distri718273` (`tbl_province_id`);
 
 --
 -- Indexes for table `tbl_employee`
@@ -266,6 +401,26 @@ ALTER TABLE `tbl_manager`
 ALTER TABLE `tbl_payment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FKtbl_paymen613026` (`tbl_water_bill_id`);
+
+--
+-- Indexes for table `tbl_pricing`
+--
+ALTER TABLE `tbl_pricing`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FKtbl_pricin802236` (`tbl_address_type_id`);
+
+--
+-- Indexes for table `tbl_province`
+--
+ALTER TABLE `tbl_province`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_ward`
+--
+ALTER TABLE `tbl_ward`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FKtbl_ward308438` (`tbl_district_id`);
 
 --
 -- Indexes for table `tbl_water_bill`
@@ -298,31 +453,37 @@ ALTER TABLE `tbl_water_meter_reading`
 -- AUTO_INCREMENT for table `tbl_account`
 --
 ALTER TABLE `tbl_account`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_address`
 --
 ALTER TABLE `tbl_address`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `tbl_area`
+-- AUTO_INCREMENT for table `tbl_address_type`
 --
-ALTER TABLE `tbl_area`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tbl_address_type`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_customer`
 --
 ALTER TABLE `tbl_customer`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tbl_district`
+--
+ALTER TABLE `tbl_district`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_employee`
 --
 ALTER TABLE `tbl_employee`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_manager`
@@ -337,6 +498,24 @@ ALTER TABLE `tbl_payment`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `tbl_pricing`
+--
+ALTER TABLE `tbl_pricing`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_province`
+--
+ALTER TABLE `tbl_province`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tbl_ward`
+--
+ALTER TABLE `tbl_ward`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tbl_water_bill`
 --
 ALTER TABLE `tbl_water_bill`
@@ -346,13 +525,13 @@ ALTER TABLE `tbl_water_bill`
 -- AUTO_INCREMENT for table `tbl_water_meter`
 --
 ALTER TABLE `tbl_water_meter`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_water_meter_reading`
 --
 ALTER TABLE `tbl_water_meter_reading`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -362,14 +541,16 @@ ALTER TABLE `tbl_water_meter_reading`
 -- Constraints for table `tbl_address`
 --
 ALTER TABLE `tbl_address`
-  ADD CONSTRAINT `FKtbl_addres380877` FOREIGN KEY (`tbl_area_id`) REFERENCES `tbl_area` (`id`);
+  ADD CONSTRAINT `FKtbl_addres438927` FOREIGN KEY (`tbl_address_type_id`) REFERENCES `tbl_address_type` (`id`),
+  ADD CONSTRAINT `FKtbl_addres871841` FOREIGN KEY (`tbl_ward_id`) REFERENCES `tbl_ward` (`id`),
+  ADD CONSTRAINT `FKtbl_addres888450` FOREIGN KEY (`tbl_customer_id`) REFERENCES `tbl_customer` (`id`);
 
 --
 -- Constraints for table `tbl_assigned_area`
 --
 ALTER TABLE `tbl_assigned_area`
-  ADD CONSTRAINT `FKtbl_assign664065` FOREIGN KEY (`tbl_employee_id`) REFERENCES `tbl_employee` (`id`),
-  ADD CONSTRAINT `FKtbl_assign695092` FOREIGN KEY (`tbl_area_id`) REFERENCES `tbl_area` (`id`);
+  ADD CONSTRAINT `FKtbl_assign23779` FOREIGN KEY (`tbl_ward_id`) REFERENCES `tbl_ward` (`id`),
+  ADD CONSTRAINT `FKtbl_assign664065` FOREIGN KEY (`tbl_employee_id`) REFERENCES `tbl_employee` (`id`);
 
 --
 -- Constraints for table `tbl_customer`
@@ -378,11 +559,10 @@ ALTER TABLE `tbl_customer`
   ADD CONSTRAINT `FKtbl_custom195669` FOREIGN KEY (`tbl_account_id`) REFERENCES `tbl_account` (`id`);
 
 --
--- Constraints for table `tbl_customer_address`
+-- Constraints for table `tbl_district`
 --
-ALTER TABLE `tbl_customer_address`
-  ADD CONSTRAINT `FKtbl_custom140314` FOREIGN KEY (`tbl_address_id`) REFERENCES `tbl_address` (`id`),
-  ADD CONSTRAINT `FKtbl_custom331234` FOREIGN KEY (`tbl_customer_id`) REFERENCES `tbl_customer` (`id`);
+ALTER TABLE `tbl_district`
+  ADD CONSTRAINT `FKtbl_distri718273` FOREIGN KEY (`tbl_province_id`) REFERENCES `tbl_province` (`id`);
 
 --
 -- Constraints for table `tbl_employee`
@@ -401,6 +581,18 @@ ALTER TABLE `tbl_manager`
 --
 ALTER TABLE `tbl_payment`
   ADD CONSTRAINT `FKtbl_paymen613026` FOREIGN KEY (`tbl_water_bill_id`) REFERENCES `tbl_water_bill` (`id`);
+
+--
+-- Constraints for table `tbl_pricing`
+--
+ALTER TABLE `tbl_pricing`
+  ADD CONSTRAINT `FKtbl_pricin802236` FOREIGN KEY (`tbl_address_type_id`) REFERENCES `tbl_address_type` (`id`);
+
+--
+-- Constraints for table `tbl_ward`
+--
+ALTER TABLE `tbl_ward`
+  ADD CONSTRAINT `FKtbl_ward308438` FOREIGN KEY (`tbl_district_id`) REFERENCES `tbl_district` (`id`);
 
 --
 -- Constraints for table `tbl_water_bill`

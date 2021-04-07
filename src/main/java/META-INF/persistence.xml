@@ -3,13 +3,32 @@
 	<persistence-unit name="sqa-water-billing">
 		<class>web.model.Account</class>
 		<class>web.model.Address</class>
-		<class>web.model.Area</class>
+		<class>web.model.AddressType</class>
 		<class>web.model.Customer</class>
+		<class>web.model.District</class>
 		<class>web.model.Employee</class>
 		<class>web.model.Manager</class>
 		<class>web.model.Payment</class>
+		<class>web.model.Pricing</class>
+		<class>web.model.Province</class>
+		<class>web.model.Ward</class>
 		<class>web.model.WaterBill</class>
 		<class>web.model.WaterMeter</class>
 		<class>web.model.WaterMeterReading</class>
+		<properties>
+			<property name="hibernate.globally_quoted_identifiers" value="true"/>
+			<property name ="hibernate.jdbc.time_zone"
+				value = "UTC"/>
+			<property name="hibernate.connection.useUnicode"
+				value="true" />
+			<property name="hibernate.connection.characterEncoding"
+				value="UTF-8" />
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:mysql://localhost:3306/sqa_water_billing_db?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" />
+			<property name="javax.persistence.jdbc.driver"
+				value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.user" 
+				value="root" />
+		</properties>
 	</persistence-unit>
 </persistence>

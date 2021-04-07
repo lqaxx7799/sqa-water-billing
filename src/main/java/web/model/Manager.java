@@ -2,6 +2,9 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 
 
@@ -27,7 +30,8 @@ public class Manager implements Serializable {
 	private String firstName;
 
 	@Column(name="is_working")
-	private byte isWorking;
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean isWorking;
 
 	@Column(name="last_name")
 	private String lastName;
@@ -67,11 +71,11 @@ public class Manager implements Serializable {
 		this.firstName = firstName;
 	}
 
-	public byte getIsWorking() {
+	public boolean getIsWorking() {
 		return this.isWorking;
 	}
 
-	public void setIsWorking(byte isWorking) {
+	public void setIsWorking(boolean isWorking) {
 		this.isWorking = isWorking;
 	}
 

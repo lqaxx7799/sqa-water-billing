@@ -19,25 +19,25 @@ public class Address implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 
-	private String city;
-
-	private String country;
-
 	@Column(name="house_number")
 	private String houseNumber;
 
-	private String province;
-
 	private String street;
 
-	//bi-directional many-to-one association to Area
+	//bi-directional many-to-one association to AddressType
 	@ManyToOne
-	@JoinColumn(name="tbl_area_id")
-	private Area tblArea;
+	@JoinColumn(name="tbl_address_type_id")
+	private AddressType tblAddressType;
 
-	//bi-directional many-to-many association to Customer
-	@ManyToMany(mappedBy="tblAddresses")
-	private List<Customer> tblCustomers;
+	//bi-directional many-to-one association to Customer
+	@ManyToOne
+	@JoinColumn(name="tbl_customer_id")
+	private Customer tblCustomer;
+
+	//bi-directional many-to-one association to Ward
+	@ManyToOne
+	@JoinColumn(name="tbl_ward_id")
+	private Ward tblWard;
 
 	//bi-directional many-to-one association to WaterMeter
 	@OneToMany(mappedBy="tblAddress")
@@ -54,36 +54,12 @@ public class Address implements Serializable {
 		this.id = id;
 	}
 
-	public String getCity() {
-		return this.city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getCountry() {
-		return this.country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
 	public String getHouseNumber() {
 		return this.houseNumber;
 	}
 
 	public void setHouseNumber(String houseNumber) {
 		this.houseNumber = houseNumber;
-	}
-
-	public String getProvince() {
-		return this.province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
 	}
 
 	public String getStreet() {
@@ -94,20 +70,28 @@ public class Address implements Serializable {
 		this.street = street;
 	}
 
-	public Area getTblArea() {
-		return this.tblArea;
+	public AddressType getTblAddressType() {
+		return this.tblAddressType;
 	}
 
-	public void setTblArea(Area tblArea) {
-		this.tblArea = tblArea;
+	public void setTblAddressType(AddressType tblAddressType) {
+		this.tblAddressType = tblAddressType;
 	}
 
-	public List<Customer> getTblCustomers() {
-		return this.tblCustomers;
+	public Customer getTblCustomer() {
+		return this.tblCustomer;
 	}
 
-	public void setTblCustomers(List<Customer> tblCustomers) {
-		this.tblCustomers = tblCustomers;
+	public void setTblCustomer(Customer tblCustomer) {
+		this.tblCustomer = tblCustomer;
+	}
+
+	public Ward getTblWard() {
+		return this.tblWard;
+	}
+
+	public void setTblWard(Ward tblWard) {
+		this.tblWard = tblWard;
 	}
 
 	public List<WaterMeter> getTblWaterMeters() {

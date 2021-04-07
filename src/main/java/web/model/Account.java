@@ -2,6 +2,7 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,9 +20,15 @@ public class Account implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 
+	@Temporal(TemporalType.DATE)
+	@Column(name="created_at")
+	private Date createdAt;
+
 	private String email;
 
 	private String password;
+
+	private String role;
 
 	//bi-directional many-to-one association to Customer
 	@OneToMany(mappedBy="tblAccount")
@@ -46,6 +53,14 @@ public class Account implements Serializable {
 		this.id = id;
 	}
 
+	public Date getCreatedAt() {
+		return this.createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public String getEmail() {
 		return this.email;
 	}
@@ -60,6 +75,14 @@ public class Account implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRole() {
+		return this.role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public List<Customer> getTblCustomers() {

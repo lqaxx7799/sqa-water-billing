@@ -2,6 +2,9 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -31,21 +34,22 @@ public class WaterBill implements Serializable {
 	private Date dueDate;
 
 	@Column(name="is_paid")
-	private byte isPaid;
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean isPaid;
 
 	//bi-directional many-to-one association to Payment
 	@OneToMany(mappedBy="tblWaterBill")
 	private List<Payment> tblPayments;
 
-	//bi-directional many-to-one association to WaterMeterReading
-	@ManyToOne
-	@JoinColumn(name="tbl_water_meter_reading_id")
-	private WaterMeterReading tblWaterMeterReading;
-
 	//bi-directional many-to-one association to Employee
 	@ManyToOne
 	@JoinColumn(name="handled_employee_id")
 	private Employee tblEmployee;
+
+	//bi-directional many-to-one association to WaterMeterReading
+	@ManyToOne
+	@JoinColumn(name="tbl_water_meter_reading_id")
+	private WaterMeterReading tblWaterMeterReading;
 
 	public WaterBill() {
 	}
@@ -82,11 +86,11 @@ public class WaterBill implements Serializable {
 		this.dueDate = dueDate;
 	}
 
-	public byte getIsPaid() {
+	public boolean getIsPaid() {
 		return this.isPaid;
 	}
 
-	public void setIsPaid(byte isPaid) {
+	public void setIsPaid(boolean isPaid) {
 		this.isPaid = isPaid;
 	}
 
@@ -112,20 +116,20 @@ public class WaterBill implements Serializable {
 		return tblPayment;
 	}
 
-	public WaterMeterReading getTblWaterMeterReading() {
-		return this.tblWaterMeterReading;
-	}
-
-	public void setTblWaterMeterReading(WaterMeterReading tblWaterMeterReading) {
-		this.tblWaterMeterReading = tblWaterMeterReading;
-	}
-
 	public Employee getTblEmployee() {
 		return this.tblEmployee;
 	}
 
 	public void setTblEmployee(Employee tblEmployee) {
 		this.tblEmployee = tblEmployee;
+	}
+
+	public WaterMeterReading getTblWaterMeterReading() {
+		return this.tblWaterMeterReading;
+	}
+
+	public void setTblWaterMeterReading(WaterMeterReading tblWaterMeterReading) {
+		this.tblWaterMeterReading = tblWaterMeterReading;
 	}
 
 }

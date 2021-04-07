@@ -2,6 +2,9 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +32,8 @@ public class WaterMeter implements Serializable {
 	private Date installedDate;
 
 	@Column(name="is_active")
-	private byte isActive;
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean isActive;
 
 	@Column(name="maximum_reading")
 	private int maximumReading;
@@ -70,11 +74,11 @@ public class WaterMeter implements Serializable {
 		this.installedDate = installedDate;
 	}
 
-	public byte getIsActive() {
+	public boolean getIsActive() {
 		return this.isActive;
 	}
 
-	public void setIsActive(byte isActive) {
+	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="page">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Language" content="vi" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><th:block th:replace="this :: titleName"></th:block> - Water Reading Application</title>
+<link href="/css/bulma.min.css"
+	rel="stylesheet" type="text/css" />
+<link href="/css/toastr.min.css"
+	rel="stylesheet" type="text/css" />
+<style>
+	.main-body {
+		padding-top: 10px;
+		padding-bottom: 30px;
+	}
+	.bookstore-wrapper {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+	}
+	.bookstore-item {
+		width: calc(100% / 5);
+	}
+	.bookstore-item:not(:last-of-type) {
+		margin-right: 20px;
+	}
+</style>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/toastr.min.js"></script>
+</head>
+<body>
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="navbar-item" th:href="@{/home}">
+				<img src="/images/logo-stackoverflow.png" style="max-height: unset; height: 30px;" />
+			</a>
+			
+			<a role="button" class="navbar-burger burger" aria-label="menu"
+				aria-expanded="false" data-target="navbarBasicExample">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+		</div>
+
+		<div id="navbarBasicExample" class="navbar-menu">
+			<div class="navbar-start">
+				<a class="navbar-item" th:href="@{/home}">Home</a>
+				<th:block th:test="${session.email}">
+					<a class="navbar-item" th:href="@{/book/list}">Bookstore</a>
+					<a class="navbar-item" th:href="@{/cart}">
+						Your Order
+						<div th:if="${session.cart != null && #lists.size(session.cart) != 0}">&nbsp;
+							<span class="tag is-primary" th:text="${#lists.size(session.cart)}" />
+						</div>
+					</a>
+				</th:block>
+			</div>
+
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<th:block th:if="${session.email == null}">
+						<div class="buttons">
+							<a class="button is-primary" th:href="@{/authentication/signUp}"><strong>Sign up</strong></a> 
+							<a class="button is-light" th:href="@{/authentication/logIn}">Log In</a>
+						</div>
+					</th:block>
+					<th:block th:if="${session.email != null}">
+						<div style="margin-right: 10px;" th:text="${'Hello, ' + session.email}" />
+						<div class="buttons">
+							<a class="button is-light" th:href="@{/authentication/logOut}">Log out</a>
+						</div>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<div class="container main-body">
+		<div th:replace="this :: content"></div>
+	</div>
+	<footer class="footer">
+  		<div class="content has-text-centered">
+    		SQA.
+  		</div>
+	</footer>
+</body>
+</html>

@@ -2,6 +2,9 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 
 
@@ -19,7 +22,8 @@ public class Payment implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 
-	private byte confirmed;
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean confirmed;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="created_at")
@@ -47,11 +51,11 @@ public class Payment implements Serializable {
 		this.id = id;
 	}
 
-	public byte getConfirmed() {
+	public boolean getConfirmed() {
 		return this.confirmed;
 	}
 
-	public void setConfirmed(byte confirmed) {
+	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
 	}
 

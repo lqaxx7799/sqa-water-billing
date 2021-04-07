@@ -2,6 +2,9 @@ package web.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +40,8 @@ public class Customer implements Serializable {
 	private String idNumber;
 
 	@Column(name="is_verified")
-	private byte isVerified;
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean isVerified;
 
 	@Column(name="last_name")
 	private String lastName;
@@ -45,23 +49,14 @@ public class Customer implements Serializable {
 	@Column(name="phone_number")
 	private String phoneNumber;
 
+	//bi-directional many-to-one association to Address
+	@OneToMany(mappedBy="tblCustomer")
+	private List<Address> tblAddresses;
+
 	//bi-directional many-to-one association to Account
 	@ManyToOne
 	@JoinColumn(name="tbl_account_id")
 	private Account tblAccount;
-
-	//bi-directional many-to-many association to Address
-	@ManyToMany
-	@JoinTable(
-		name="tbl_customer_address"
-		, joinColumns={
-			@JoinColumn(name="tbl_customer_id")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="tbl_address_id")
-			}
-		)
-	private List<Address> tblAddresses;
 
 	public Customer() {
 	}
@@ -114,11 +109,11 @@ public class Customer implements Serializable {
 		this.idNumber = idNumber;
 	}
 
-	public byte getIsVerified() {
+	public boolean getIsVerified() {
 		return this.isVerified;
 	}
 
-	public void setIsVerified(byte isVerified) {
+	public void setIsVerified(boolean isVerified) {
 		this.isVerified = isVerified;
 	}
 
@@ -138,20 +133,34 @@ public class Customer implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Account getTblAccount() {
-		return this.tblAccount;
-	}
-
-	public void setTblAccount(Account tblAccount) {
-		this.tblAccount = tblAccount;
-	}
-
 	public List<Address> getTblAddresses() {
 		return this.tblAddresses;
 	}
 
 	public void setTblAddresses(List<Address> tblAddresses) {
 		this.tblAddresses = tblAddresses;
+	}
+
+	public Address addTblAddress(Address tblAddress) {
+		getTblAddresses().add(tblAddress);
+		tblAddress.setTblCustomer(this);
+
+		return tblAddress;
+	}
+
+	public Address removeTblAddress(Address tblAddress) {
+		getTblAddresses().remove(tblAddress);
+		tblAddress.setTblCustomer(null);
+
+		return tblAddress;
+	}
+
+	public Account getTblAccount() {
+		return this.tblAccount;
+	}
+
+	public void setTblAccount(Account tblAccount) {
+		this.tblAccount = tblAccount;
 	}
 
 }

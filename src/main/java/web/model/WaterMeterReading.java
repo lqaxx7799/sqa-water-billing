@@ -35,15 +35,15 @@ public class WaterMeterReading implements Serializable {
 	@OneToMany(mappedBy="tblWaterMeterReading")
 	private List<WaterBill> tblWaterBills;
 
-	//bi-directional many-to-one association to WaterMeter
-	@ManyToOne
-	@JoinColumn(name="tbl_water_meter_id")
-	private WaterMeter tblWaterMeter;
-
 	//bi-directional many-to-one association to Employee
 	@ManyToOne
 	@JoinColumn(name="handled_employee_id")
 	private Employee tblEmployee;
+
+	//bi-directional many-to-one association to WaterMeter
+	@ManyToOne
+	@JoinColumn(name="tbl_water_meter_id")
+	private WaterMeter tblWaterMeter;
 
 	public WaterMeterReading() {
 	}
@@ -110,20 +110,20 @@ public class WaterMeterReading implements Serializable {
 		return tblWaterBill;
 	}
 
-	public WaterMeter getTblWaterMeter() {
-		return this.tblWaterMeter;
-	}
-
-	public void setTblWaterMeter(WaterMeter tblWaterMeter) {
-		this.tblWaterMeter = tblWaterMeter;
-	}
-
 	public Employee getTblEmployee() {
 		return this.tblEmployee;
 	}
 
 	public void setTblEmployee(Employee tblEmployee) {
 		this.tblEmployee = tblEmployee;
+	}
+
+	public WaterMeter getTblWaterMeter() {
+		return this.tblWaterMeter;
+	}
+
+	public void setTblWaterMeter(WaterMeter tblWaterMeter) {
+		this.tblWaterMeter = tblWaterMeter;
 	}
 
 }
