@@ -1,12 +1,16 @@
 package web.controller;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +25,7 @@ import web.repos.CustomerRepository;
 import web.repos.DistrictRepository;
 import web.repos.ProvinceRepository;
 import web.repos.WardRepository;
+import web.repos.WaterMeterRepository;
 import web.util.CommonUtils;
 import web.dto.LogInDTO;
 import web.dto.RegistrationDTO;
@@ -31,6 +36,7 @@ import web.model.Customer;
 import web.model.District;
 import web.model.Province;
 import web.model.Ward;
+import web.model.WaterMeter;
 
 @Controller
 @RequestMapping("/authentication")
@@ -49,6 +55,8 @@ public class AuthenticationController {
 	private DistrictRepository districtRepository;
 	@Autowired
 	private WardRepository wardRepository;
+	@Autowired
+	private WaterMeterRepository waterMeterRepository;
 
 	@GetMapping("/logIn")
 	public String viewLogIn(Model model) {
@@ -106,13 +114,102 @@ public class AuthenticationController {
 		model.addAttribute("districts", districts);
 		model.addAttribute("wards", wards);
 		model.addAttribute("registrationDTO", new RegistrationDTO());
+		model.addAttribute("errors", new LinkedHashMap<String, String>());
 		return "registration";
 	}
 	
 	@PostMapping("/registration")
 	public String submitRegistration(@ModelAttribute RegistrationDTO registrationDTO, Model model) {
-		List<AddressType> addressTypes = addressTypeRepository.findAll();
-		List<Province> provinces = provinceRepository.findAll();
+		Map<String, String> errors = new LinkedHashMap<>();
+		boolean isValid = true;
+		
+		if (registrationDTO.getLastName().equals("")) {
+			isValid = false;
+			errors.put("errLastName", "Họ không được để trống");
+		}
+		
+		if (registrationDTO.getFirstName().equals("")) {
+			isValid = false;
+			errors.put("errFirstName", "Tên không được để trống");
+		}
+		
+		if (registrationDTO.getEmail().equals("")) {
+			isValid = false;
+			errors.put("errEmail", "Email không được để trống");
+		} else if (CommonUtils.checkEmailFormat(registrationDTO.getEmail())) {
+			isValid = false;
+			errors.put("errEmail", "Định dạng email không hợp lệ");
+		} else {
+			Account existedAccount = accountRepository.findOneByEmail(registrationDTO.getEmail());
+			if (existedAccount != null) {
+				isValid = false;
+				errors.put("errEmail", "Email đã tồn tại");
+			}
+		}
+		
+		if (registrationDTO.getPassword().equals("")) {
+			isValid = false;
+			errors.put("errPassword", "Mật khẩu không được để trống");
+		}
+		
+		if (registrationDTO.getReenterPassword().equals("")) {
+			isValid = false;
+			errors.put("errReenterPassword", "Vui lòng nhập lại mật khẩu");
+		} else if (!registrationDTO.getReenterPassword().equals(registrationDTO.getPassword())) {
+			isValid = false;
+			errors.put("errReenterPassword", "Mật khẩu không khớp");
+		}
+		
+		if (registrationDTO.getIdNumber().equals("")) {
+			isValid = false;
+			errors.put("errIdNumber", "CMT/CCCD không được để trống");
+		} else if (CommonUtils.checkIdNumberFormat(registrationDTO.getIdNumber())) {
+			isValid = false;
+			errors.put("errIdNumber", "CMT/CCCD có 9 hoặc 12 số");
+		}
+		
+		if (registrationDTO.getPhoneNumber().equals("")) {
+			isValid = false;
+			errors.put("errPhoneNumber", "Số điện thoại không được để trống");
+		}
+		
+		if (registrationDTO.getDateOfBirth() == null) {
+			isValid = false;
+			errors.put("errDateOfBirth", "Ngày sinh không được để trống");
+		} else if (registrationDTO.getDateOfBirth().after(new Date())) {
+			isValid = false;
+			errors.put("errDateOfBirth", "Ngày sinh không được trong tương lai");
+		}
+		
+		if (!isValid) {
+			List<AddressType> addressTypes = addressTypeRepository.findAll();
+			List<Province> provinces = provinceRepository.findAll();
+			Province selectedProvince = registrationDTO.getProvinceId() == 0
+					? provinces.get(0)
+					: provinces
+						.stream()
+						.filter(province -> province.getId() == registrationDTO.getProvinceId())
+						.findFirst()
+						.get();
+			List<District> districts = districtRepository.findByTblProvince(selectedProvince);
+			District selectedDistrict = registrationDTO.getDistrictId() == 0
+					? districts.get(0)
+					: districts
+						.stream()
+						.filter(district -> district.getId() == registrationDTO.getDistrictId())
+						.findFirst()
+						.get();
+			
+			List<Ward> wards = wardRepository.findByTblDistrict(selectedDistrict);
+			
+			model.addAttribute("addressTypes", addressTypes);
+			model.addAttribute("provinces", provinces);
+			model.addAttribute("districts", districts);
+			model.addAttribute("wards", wards);
+			model.addAttribute("registrationDTO", registrationDTO);
+			model.addAttribute("errors", errors);
+			return "registration";
+		}
 		
 		Account account = new Account();
 		account.setEmail(registrationDTO.getEmail());
@@ -143,12 +240,46 @@ public class AuthenticationController {
 		address.setTblAddressType(addressType);
 		addressRepository.save(address);
 		
-		return "redirect:/";
+		WaterMeter waterMeter = new WaterMeter();
+		waterMeter.setInstalledDate(new Date());
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.add(Calendar.YEAR, 2);
+		waterMeter.setExpiredDate(calendar.getTime());
+		waterMeter.setIsActive(false);
+		waterMeter.setMaximumReading(10000);
+		waterMeter.setTblAddress(address);
+		waterMeterRepository.save(waterMeter);
 		
-//		model.addAttribute("addressTypes", addressTypes);
-//		model.addAttribute("provinces", provinces);
-//		model.addAttribute("registrationDTO", new RegistrationDTO());
-//		return "registration";
+		// [TODO]: Send validate email
+		
+		return "redirect:/";
+	}
+	
+	@GetMapping("/validate")
+	public String validate(@Param("email") String email, Model model) {
+		Account account = accountRepository.findOneByEmail(email);
+		if (account == null) {
+			return "redirect:/";
+		}
+		if (!account.getRole().equals("CUSTOMER")) {
+			return "redirect:/";
+		}
+		Customer customer = customerRepository.findOneByAccountId(account.getId());
+		if (customer == null) {
+			return "redirect:/";
+		}
+		if (customer.getIsVerified()) {
+			return "redirect:/";
+		}
+		customer.setIsVerified(true);
+		customerRepository.save(customer);
+		
+		WaterMeter waterMeter = waterMeterRepository.findLastByCustomer(customer.getId());
+		waterMeter.setIsActive(true);
+		waterMeterRepository.save(waterMeter);
+
+		return "redirect:/";
 	}
 	
 	@GetMapping("/logOut")

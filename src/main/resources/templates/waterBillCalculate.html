@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:include="layout :: page">
+    <head>
+        <title>
+        	<th:block th:fragment="titleName">Tính tiền nước</th:block>
+        </title>
+    </head>
+    <body>
+        <div th:fragment="content">
+    		<div class="is-size-2">Tính tiền nước:</div>
+            <form class="form" id="formSelectArea" method="get" th:action="@{/waterBill/calculate}">
+           		<div class="field">
+				  	<label class="label">Vui lòng chọn khu vực bạn muốn xem:</label>
+				  	<div class="control">
+				    	<div class="select">
+				      		<select name="wardId">
+			            		<th:block th:each="area: ${assignedAreas}">
+			            			<option th:value="${area.id}" th:text="${area.wardName}" />
+			            		</th:block>
+			            	</select>
+				    	</div>
+				  	</div>
+				</div>
+            	
+            	<div class="field is-grouped">
+  					<div class="control">
+    					<button class="button is-link" type="submit">Tìm kiếm</button>
+  					</div>	
+				</div>
+            </form>
+            <th:block th:if="${bills != null && #lists.size(bills) != 0}">
+            	<table class="table">
+            		<thead>
+            			<tr>
+            				<th>STT</th>
+            				<th>Mã số đồng hồ</th>
+            				<th>Tên khách hàng</th>
+            				<th>Địa chị</th>
+            				<th>Chỉ số kỳ trước</th>
+            				<th>Chỉ số kỳ sau</th>
+            				<th>Chỉ số tiêu thụ</th>
+            				<th>Thành tiền</th>
+            			</tr>
+            		</thead>
+            		<tbody>
+            			<tr class="readingRow" th:each="bill, iter: ${bills}" th:attr="data-waterMeterId=${bill.waterMeter.id}">
+            				<td th:text="${iter.index + 1}" />
+            				<td th:text="${bill.waterMeter.id}" />
+            				<td th:text="${bill.customer.firstName}" />
+            				<td th:text="${bill.address.houseNumber}" />
+            				<td th:text="${bill.previousReading.readingValue}" />
+            				<td
+            					class="column-current-bill"
+            					data-state="view"
+            					th:attr="data-waterMeterId=${bill.waterMeter.id}"
+            					th:text="${bill.currentReading.readingValue}"
+           					/>
+            				<td
+            					th:text="${bill.currentReading.readingValue} ? ${bill.currentReading.readingValue - bill.previousReading.readingValue} : 0"
+            				/>
+            				<td th:text="${bill.cost}" />
+            			</tr>
+            		</tbody>
+            	</table>
+            	<button id="btnSubmit" type="button" class="button is-primary">Xuất hóa đơn</button>
+            	<button id="btnCancel" type="button" class="button is-light">Hủy</button>
+            </th:block>
+            
+	        <script th:inline="javascript">
+	        	$(document).ready(function() {
+	        		$(document).on('click', '#btnSubmit', function(e) {
+	        			console.log(11111)
+	        			$.ajax({
+	        				type: 'POST',
+	        				url: '/waterBill/save?wardId=' + [[${param.wardId}]],
+	    	                contentType: 'application/json; charset=utf-8',
+	    	                success: function(res) {
+	    	                	console.log(res)
+	    	                	if (res.result === 'success') {    	                		
+		    	                	toastr.success('Lưu hóa đơn nước thành công.')
+	    	                	} else {
+	    	                		toastr.error('Có lỗi đã xảy ra trong quá trình lưu. Xin vui lòng thử lại sau.');	
+	    	                	}
+	    	                },
+	    	                error: function(res) {
+	    	                	toastr.error('Có lỗi đã xảy ra trong quá trình cập nhật. Xin vui lòng thử lại sau.');
+	    	                },
+	        			});
+	        		});
+	        	});
+	        </script>
+        </div>
+    </body>
+</html>

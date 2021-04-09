@@ -18,6 +18,7 @@
 		  					<label class="label">Email</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{email}" type="text" placeholder="Nhập email">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errEmail')}" />
 		  					</div>
 						</div>
             		</div>

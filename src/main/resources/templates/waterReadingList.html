@@ -10,12 +10,12 @@
     <body>
         <div th:fragment="content">
     		<div class="is-size-2">Xem số nước:</div>
-            <form class="form" id="formSelectArea" method="post" th:action="@{/reading/list}">
+            <form class="form" id="formSelectArea" method="get" th:action="@{/reading/list}">
            		<div class="field">
 				  	<label class="label">Vui lòng chọn khu vực bạn muốn xem:</label>
 				  	<div class="control">
 				    	<div class="select">
-				      		<select name="areaId">
+				      		<select name="wardId">
 			            		<th:block th:each="area: ${assignedAreas}">
 			            			<option th:value="${area.id}" th:text="${area.wardName}" />
 			            		</th:block>
@@ -46,7 +46,7 @@
             		</thead>
             		<tbody>
             			<tr class="readingRow" th:each="reading, iter: ${readings}" th:attr="data-waterMeterId=${reading.waterMeter.id}">
-            				<td th:text="${iter.index}" />
+            				<td th:text="${iter.index + 1}" />
             				<td th:text="${reading.waterMeter.id}" />
             				<td th:text="${reading.customer.firstName}" />
             				<td th:text="${reading.address.houseNumber}" />

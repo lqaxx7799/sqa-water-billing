@@ -55,7 +55,11 @@ public class WaterMeterReadingController {
 	private AccountRepository accountRepository;
 	
 	@GetMapping("/list")
-	public String read(Model model, HttpServletRequest request) {
+	public String read(
+			Model model, 
+			@RequestParam(value = "wardId", required = false) Integer wardId, 
+			HttpServletRequest request
+	) {
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("email");
 		Account account = accountRepository.findOneByEmail(email);
@@ -68,18 +72,13 @@ public class WaterMeterReadingController {
 		if (employee == null) {
 			return "redirect:/";
 		}
-
-		model.addAttribute("assignedAreas", employee.getTblWards());
-		return "waterReadingList";
-	}
-	
-	@PostMapping("/list")
-	public String getData(
-			@RequestParam(value = "areaId", required = true) Integer areaId,
-			Model model
-	) {
-		Ward ward = wardRepository.findById(areaId).get();
-		Employee employee = employeeRepository.findById(1).get();
+		
+		if (wardId == null || wardId.equals("")) {			
+			model.addAttribute("assignedAreas", employee.getTblWards());
+			return "waterReadingList";
+		}
+		
+		Ward ward = wardRepository.findById(wardId).get();
 		List<Address> addresses = addressRepository.findByTblWard(ward);
 		
 		Calendar today = Calendar.getInstance();
@@ -87,8 +86,8 @@ public class WaterMeterReadingController {
 		int year = today.get(Calendar.YEAR);
 		int[] previousPeriod = CommonUtils.getPreviousPeriod(month, year);
 		
-		List<WaterMeterReading> currentReadings = waterMeterReadingRepository.findByPeriodAndArea(month, year, areaId);
-		List<WaterMeterReading> previousReadings = waterMeterReadingRepository.findByPeriodAndArea(previousPeriod[0], previousPeriod[1], areaId);
+		List<WaterMeterReading> currentReadings = waterMeterReadingRepository.findByPeriodAndWard(month, year, wardId);
+		List<WaterMeterReading> previousReadings = waterMeterReadingRepository.findByPeriodAndWard(previousPeriod[0], previousPeriod[1], wardId);
 		
 		List<WaterMeterReadingDTO> readings = addresses
 			.stream()

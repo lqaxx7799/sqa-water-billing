@@ -47,15 +47,14 @@
 
 		<div id="navbarBasicExample" class="navbar-menu">
 			<div class="navbar-start">
-				<a class="navbar-item" th:href="@{/home}">Home</a>
-				<th:block th:test="${session.email}">
-					<a class="navbar-item" th:href="@{/book/list}">Bookstore</a>
-					<a class="navbar-item" th:href="@{/cart}">
-						Your Order
-						<div th:if="${session.cart != null && #lists.size(session.cart) != 0}">&nbsp;
-							<span class="tag is-primary" th:text="${#lists.size(session.cart)}" />
-						</div>
-					</a>
+				<a class="navbar-item" th:href="@{/}">Trang chủ</a>
+				<th:block th:if="${session.role == 'EMPLOYEE'}">
+					<a class="navbar-item" th:href="@{/reading/list}">Cập nhật số nước</a>
+					<a class="navbar-item" th:href="@{/waterBill/calculate}">Tính tiền nước</a>
+				</th:block>
+				<th:block th:if="${session.role == 'CUSTOMER'}">
+					<a class="navbar-item" th:href="@{/account/detail}">Thông tin cá nhân</a>
+					<a class="navbar-item" th:href="@{/waterBill/pay}">Đóng tiền nước</a>
 				</th:block>
 			</div>
 
