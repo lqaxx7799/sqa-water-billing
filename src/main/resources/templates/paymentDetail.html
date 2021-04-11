@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:include="layout :: page">
+    <head>
+        <title>
+        	<th:block th:fragment="titleName">Thanh toán</th:block>
+        </title>
+    </head>
+    <body>
+        <div th:fragment="content">
+        	<div class="is-size-2">Chi tiết hóa đơn</div>
+           	<div class="box">
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Tên khách hàng</div>
+           			<div class="column" th:text="${bill.customerName}"></div>
+           		</div>
+           		
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Địa chỉ</div>
+           			<div class="column" th:text="${bill.address}"></div>
+           		</div>
+           		
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Loại hộ sử dụng</div>
+           			<div class="column" th:text="${bill.addressType}"></div>
+           		</div>
+           		
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Thời gian sử dụng</div>
+           			<div class="column" th:text="${bill.date}"></div>
+           		</div>
+           		
+           		<table class="table">
+           			<thead>
+           				<tr>
+           					<th>Chỉ số tháng này</th>
+           					<th>Chỉ số tháng trước</th>
+           					<th>Tổng tiêu thụ (m<sup>3</sup>)</th>
+           					<th>Định mức tiêu thụ</th>
+           					<th>Đơn giá</th>
+           					<th>Thành tiền (đồng)</th>
+           				</tr>
+           			</thead>
+           			<tbody>
+           				<tr>
+           					<td th:text="${bill.currentReading}"></td>
+           					<td th:text="${bill.previousReading}"></td>
+           					<td th:text="${bill.calculatedReading}"></td>
+           					<td></td>
+           					<td></td>
+           					<td></td>
+           				</tr>
+           			</tbody>
+           		</table>
+           	
+           	</div>
+        </div>
+    </body>
+</html>

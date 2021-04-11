@@ -147,10 +147,15 @@ public class WaterMeterReadingController {
 		Calendar today = Calendar.getInstance();
 		int month = today.get(Calendar.MONTH) + 1;
 		int year = today.get(Calendar.YEAR);
+		int[] previousPeriod = CommonUtils.getPreviousPeriod(month, year);
 		
 		for (WaterReadingUpdateDTO item: data) {
 			WaterMeterReading reading = waterMeterReadingRepository.findOneByPeriodAndMeter(month, year, item.getWaterMeterId());
+			WaterMeterReading previousReading = waterMeterReadingRepository.findOneByPeriodAndMeter(previousPeriod[0], previousPeriod[1], item.getWaterMeterId());
 			WaterMeter waterMeter = waterMeterRepository.findById(item.getWaterMeterId()).orElse(null);
+			
+			int previousValue = previousReading == null ? 0 : previousReading.getCalculatedValue();
+			
 			if (reading == null) {
 				WaterMeterReading newReading = new WaterMeterReading();
 				newReading.setCreatedAt(new Date());
@@ -159,9 +164,11 @@ public class WaterMeterReadingController {
 				newReading.setTblEmployee(employee);
 				newReading.setYear(year);
 				newReading.setTblWaterMeter(waterMeter);
+				newReading.setCalculatedValue(item.getReadingValue() - previousValue);
 				waterMeterReadingRepository.save(newReading);
 			} else {
 				reading.setReadingValue(item.getReadingValue());
+				reading.setCalculatedValue(item.getReadingValue() - previousValue);
 				waterMeterReadingRepository.save(reading);
 			}
 		}

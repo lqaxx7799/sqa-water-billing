@@ -44,6 +44,9 @@ public class WaterMeterReading implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="tbl_water_meter_id")
 	private WaterMeter tblWaterMeter;
+	
+	@Column(name="calculated_value")
+	private int calculatedValue;
 
 	public WaterMeterReading() {
 	}
@@ -124,6 +127,14 @@ public class WaterMeterReading implements Serializable {
 
 	public void setTblWaterMeter(WaterMeter tblWaterMeter) {
 		this.tblWaterMeter = tblWaterMeter;
+	}
+
+	public int getCalculatedValue() {
+		return calculatedValue;
+	}
+
+	public void setCalculatedValue(int calculatedValue) {
+		this.calculatedValue = calculatedValue;
 	}
 
 }
