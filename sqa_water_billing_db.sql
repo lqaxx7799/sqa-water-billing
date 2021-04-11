@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2021 at 11:39 AM
+-- Generation Time: Apr 11, 2021 at 07:00 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -36,7 +36,7 @@ CREATE TABLE `hibernate_sequence` (
 --
 
 INSERT INTO `hibernate_sequence` (`next_val`) VALUES
-(2);
+(1);
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,8 @@ CREATE TABLE `tbl_account` (
 
 INSERT INTO `tbl_account` (`id`, `email`, `password`, `created_at`, `role`) VALUES
 (1, 'qanh@gmail.com', '7ce0359f12857f2a90c7de465f40a95f01cb5da9', '2021-04-06', 'EMPLOYEE'),
-(2, 'anna@gmail.com', '7ce0359f12857f2a90c7de465f40a95f01cb5da9', '2021-04-06', 'CUSTOMER');
+(2, 'anna@gmail.com', '7ce0359f12857f2a90c7de465f40a95f01cb5da9', '2021-04-06', 'CUSTOMER'),
+(3, 'lqaxx7799@gmail.com', '7ce0359f12857f2a90c7de465f40a95f01cb5da9', '2021-04-07', 'CUSTOMER');
 
 -- --------------------------------------------------------
 
@@ -104,6 +105,20 @@ INSERT INTO `tbl_address_type` (`id`, `type`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_area`
+--
+
+CREATE TABLE `tbl_area` (
+  `id` int(10) NOT NULL,
+  `ward` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
+  `district` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
+  `city` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
+  `country` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_assigned_area`
 --
 
@@ -144,7 +159,8 @@ CREATE TABLE `tbl_customer` (
 --
 
 INSERT INTO `tbl_customer` (`id`, `first_name`, `last_name`, `phone_number`, `date_of_birth`, `gender`, `id_number`, `created_at`, `is_verified`, `tbl_account_id`) VALUES
-(1, 'Anna', 'Bell', '0123456789', '1999-10-23', 'female', '01232323232', '2021-04-06', 1, 2);
+(1, 'Anna', 'Bell', '0123456789', '1999-10-23', 'female', '01232323232', '2021-04-06', 1, 2),
+(4, 'Quoc', 'Lam', '+84976176490', NULL, 'male', '0535234543', '2021-04-07', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -293,6 +309,13 @@ CREATE TABLE `tbl_water_bill` (
   `handled_employee_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
 
+--
+-- Dumping data for table `tbl_water_bill`
+--
+
+INSERT INTO `tbl_water_bill` (`id`, `amount`, `created_at`, `is_paid`, `due_date`, `tbl_water_meter_reading_id`, `handled_employee_id`) VALUES
+(7, 1000, '2021-04-09', 0, '2021-04-16', 6, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -328,8 +351,16 @@ CREATE TABLE `tbl_water_meter_reading` (
   `reading_value` int(10) NOT NULL,
   `created_at` date NOT NULL,
   `tbl_water_meter_id` int(10) NOT NULL,
-  `handled_employee_id` int(10) NOT NULL
+  `handled_employee_id` int(10) NOT NULL,
+  `calculated_value` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_water_meter_reading`
+--
+
+INSERT INTO `tbl_water_meter_reading` (`id`, `month`, `year`, `reading_value`, `created_at`, `tbl_water_meter_id`, `handled_employee_id`, `calculated_value`) VALUES
+(6, 4, 2021, 100, '2021-04-09', 1, 1, 100);
 
 --
 -- Indexes for dumped tables
@@ -339,8 +370,7 @@ CREATE TABLE `tbl_water_meter_reading` (
 -- Indexes for table `tbl_account`
 --
 ALTER TABLE `tbl_account`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_address`
@@ -355,8 +385,13 @@ ALTER TABLE `tbl_address`
 -- Indexes for table `tbl_address_type`
 --
 ALTER TABLE `tbl_address_type`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `type` (`type`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_area`
+--
+ALTER TABLE `tbl_area`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_assigned_area`
@@ -371,7 +406,6 @@ ALTER TABLE `tbl_assigned_area`
 --
 ALTER TABLE `tbl_customer`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id_number` (`id_number`),
   ADD KEY `FKtbl_custom195669` (`tbl_account_id`);
 
 --
@@ -453,7 +487,7 @@ ALTER TABLE `tbl_water_meter_reading`
 -- AUTO_INCREMENT for table `tbl_account`
 --
 ALTER TABLE `tbl_account`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_address`
@@ -468,10 +502,16 @@ ALTER TABLE `tbl_address_type`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `tbl_area`
+--
+ALTER TABLE `tbl_area`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tbl_customer`
 --
 ALTER TABLE `tbl_customer`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_district`
@@ -519,7 +559,7 @@ ALTER TABLE `tbl_ward`
 -- AUTO_INCREMENT for table `tbl_water_bill`
 --
 ALTER TABLE `tbl_water_bill`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_water_meter`
@@ -531,7 +571,7 @@ ALTER TABLE `tbl_water_meter`
 -- AUTO_INCREMENT for table `tbl_water_meter_reading`
 --
 ALTER TABLE `tbl_water_meter_reading`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
