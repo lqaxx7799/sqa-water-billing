@@ -31,7 +31,7 @@
 				</div>
             </form>
             <th:block th:if="${bills != null && #lists.size(bills) != 0}">
-            	<table class="table">
+            	<table class="table" id="waterBillTable">
             		<thead>
             			<tr>
             				<th>STT</th>
@@ -66,7 +66,8 @@
             			</tr>
             		</tbody>
             	</table>
-            	<button id="btnSubmit" type="button" class="button is-primary">Xuất hóa đơn</button>
+            	<button id="btnSubmit" type="button" class="button is-primary">Lưu hóa đơn</button>
+            	<button id="btnExport" type="button" class="button is-link">Xuất hóa đơn</button>
             	<button id="btnCancel" type="button" class="button is-light">Hủy</button>
             </th:block>
             
@@ -90,6 +91,16 @@
 	    	                },
 	        			});
 	        		});
+	        		
+	        		$("#btnExport").click(function() {
+	        			toastr.info('Đang chuẩn bị file của bạn');
+	        	        TableToExcel.convert(document.getElementById("waterBillTable"), {
+	        	            name: "water_bill_export.xlsx",
+	        	            sheet: {
+	        	            	name: "Sheet1"
+        	            	},
+        	          	});
+        	        });
 	        	});
 	        </script>
         </div>
