@@ -1,11 +1,14 @@
 package web.controller;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import web.repos.AccountRepository;
 import web.repos.AddressRepository;
@@ -29,6 +33,7 @@ import web.repos.WaterMeterRepository;
 import web.util.CommonUtils;
 import web.dto.LogInDTO;
 import web.dto.RegistrationDTO;
+import web.mail.EmailService;
 import web.model.Account;
 import web.model.Address;
 import web.model.AddressType;
@@ -136,7 +141,7 @@ public class AuthenticationController {
 		if (registrationDTO.getEmail().equals("")) {
 			isValid = false;
 			errors.put("errEmail", "Email không được để trống");
-		} else if (CommonUtils.checkEmailFormat(registrationDTO.getEmail())) {
+		} else if (!CommonUtils.checkEmailFormat(registrationDTO.getEmail())) {
 			isValid = false;
 			errors.put("errEmail", "Định dạng email không hợp lệ");
 		} else {
@@ -163,7 +168,7 @@ public class AuthenticationController {
 		if (registrationDTO.getIdNumber().equals("")) {
 			isValid = false;
 			errors.put("errIdNumber", "CMT/CCCD không được để trống");
-		} else if (CommonUtils.checkIdNumberFormat(registrationDTO.getIdNumber())) {
+		} else if (!CommonUtils.checkIdNumberFormat(registrationDTO.getIdNumber())) {
 			isValid = false;
 			errors.put("errIdNumber", "CMT/CCCD có 9 hoặc 12 số");
 		}
@@ -243,6 +248,7 @@ public class AuthenticationController {
 		address.setStreet(registrationDTO.getStreet());
 		address.setTblWard(ward);
 		address.setTblAddressType(addressType);
+		address.setTblCustomer(customer);
 		addressRepository.save(address);
 		
 		WaterMeter waterMeter = new WaterMeter();
@@ -256,7 +262,10 @@ public class AuthenticationController {
 		waterMeter.setTblAddress(address);
 		waterMeterRepository.save(waterMeter);
 		
-		// [TODO]: Send validate email
+//		[TODO]: Send validate email
+		String mailBody = "<div>Xin vui lòng nhấn vào liên kết sau để xác thực tài khoản của bạn</div>";
+		mailBody += "<a href='http://localhost:8080/validate?email="+ registrationDTO.getEmail() +"' target='_blank'>Xác thực</a>";
+		EmailService.sendMail(registrationDTO.getEmail(), "Xác thực tài khoản của bạn", "Xác thực tài khoản của bạn", mailBody);
 		
 		return "redirect:/";
 	}

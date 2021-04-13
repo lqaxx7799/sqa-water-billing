@@ -29,7 +29,7 @@
 	            		<div class="field">
 	  						<label class="label">Nhập mật khẩu</label>
 		  					<div class="control">
-		    					<input class="input" th:field="*{password}" type="text" placeholder="Nhập mật khẩu">
+		    					<input class="input" th:field="*{password}" type="password" placeholder="Nhập mật khẩu">
 		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errPassword')}"></span>
 		  					</div>
 						</div>
@@ -38,7 +38,7 @@
 	            		<div class="field">
 	  						<label class="label">Nhập lại mật khẩu</label>
 		  					<div class="control">
-		    					<input class="input" th:field="*{reenterPassword}" type="text" placeholder="Nhập lại mật khẩu">
+		    					<input class="input" th:field="*{reenterPassword}" type="password" placeholder="Nhập lại mật khẩu">
 		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errReenterPassword')}"></span>
 		  					</div>
 						</div>
