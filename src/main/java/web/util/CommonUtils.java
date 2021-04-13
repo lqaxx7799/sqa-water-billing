@@ -69,9 +69,44 @@ public class CommonUtils {
 		return ptr.matcher(input).matches();
 	}
 	
-	public static float calculateBill(float reading, Pricing pricing) {
-		// [TODO]: calculate bill cost by formula
-		return 1000;
+	public static boolean checkPaymentCodeFormat(String input) {
+		Pattern ptr = Pattern.compile("^\\-{0,1}[0-9]{1,}$");
+		return ptr.matcher(input).matches();
+	}
+	
+	public static float calculateBill(int reading, Pricing pricing) {
+		float temp = reading;
+		float amount = 0;
+		for (int i = 1; i <= 4; i ++) {
+			float unitPrice = 0;
+			switch (i) {
+				case 1:
+					unitPrice = pricing.getUnitPriceLevel1();
+					break;
+				case 2:
+					unitPrice = pricing.getUnitPriceLevel2();
+					break;
+				case 3:
+					unitPrice = pricing.getUnitPriceLevel3();
+					break;
+				case 4:
+					unitPrice = pricing.getUnitPriceLevel4();
+					break;
+			}
+			
+			if (i != 4) {				
+				if (temp > 10) {
+					amount += 10 * unitPrice;
+				} else {
+					amount += temp * unitPrice;
+					break;
+				}
+				temp -= 10;
+			} else {
+				amount += temp * unitPrice;
+			}
+		}
+		return amount;
 	}
 
 }

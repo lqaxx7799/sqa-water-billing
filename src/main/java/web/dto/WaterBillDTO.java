@@ -1,5 +1,6 @@
 package web.dto;
 
+import java.util.List;
 import java.util.Map;
 
 import web.model.WaterBill;
@@ -12,7 +13,7 @@ public class WaterBillDTO {
 	private int previousReading;
 	private int currentReading;
 	private int calculatedReading;
-	private Map<Integer, Integer> detailedBill;
+	private List<DetailedBillDTO> detailedBill;
 	private float totalPrice;
 	private WaterBill waterBill;
 
@@ -72,11 +73,11 @@ public class WaterBillDTO {
 		this.calculatedReading = calculatedReading;
 	}
 
-	public Map<Integer, Integer> getDetailedBill() {
+	public List<DetailedBillDTO> getDetailedBill() {
 		return detailedBill;
 	}
 
-	public void setDetailedBill(Map<Integer, Integer> detailedBill) {
+	public void setDetailedBill(List<DetailedBillDTO> detailedBill) {
 		this.detailedBill = detailedBill;
 	}
 

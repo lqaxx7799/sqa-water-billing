@@ -34,14 +34,18 @@ public class Pricing implements Serializable {
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isApplying;
 
-	@Column(name="unit_price")
-	private float unitPrice;
+	@Column(name="unit_price_level_1")
+	private float unitPriceLevel1;
+	
+	@Column(name="unit_price_level_2", nullable = true)
+	private float unitPriceLevel2;
+	
+	@Column(name="unit_price_level_3", nullable = true)
+	private float unitPriceLevel3;
+	
+	@Column(name="unit_price_level_4", nullable = true)
+	private float unitPriceLevel4;
 
-	@Column(name="usage_range_from")
-	private float usageRangeFrom;
-
-	@Column(name="usage_range_to")
-	private float usageRangeTo;
 
 	//bi-directional many-to-one association to AddressType
 	@ManyToOne
@@ -83,36 +87,44 @@ public class Pricing implements Serializable {
 		this.isApplying = isApplying;
 	}
 
-	public float getUnitPrice() {
-		return this.unitPrice;
-	}
-
-	public void setUnitPrice(float unitPrice) {
-		this.unitPrice = unitPrice;
-	}
-
-	public float getUsageRangeFrom() {
-		return this.usageRangeFrom;
-	}
-
-	public void setUsageRangeFrom(float usageRangeFrom) {
-		this.usageRangeFrom = usageRangeFrom;
-	}
-
-	public float getUsageRangeTo() {
-		return this.usageRangeTo;
-	}
-
-	public void setUsageRangeTo(float usageRangeTo) {
-		this.usageRangeTo = usageRangeTo;
-	}
-
 	public AddressType getTblAddressType() {
 		return this.tblAddressType;
 	}
 
 	public void setTblAddressType(AddressType tblAddressType) {
 		this.tblAddressType = tblAddressType;
+	}
+
+	public float getUnitPriceLevel1() {
+		return unitPriceLevel1;
+	}
+
+	public void setUnitPriceLevel1(float unitPriceLevel1) {
+		this.unitPriceLevel1 = unitPriceLevel1;
+	}
+
+	public float getUnitPriceLevel2() {
+		return unitPriceLevel2;
+	}
+
+	public void setUnitPriceLevel2(float unitPriceLevel2) {
+		this.unitPriceLevel2 = unitPriceLevel2;
+	}
+
+	public float getUnitPriceLevel3() {
+		return unitPriceLevel3;
+	}
+
+	public void setUnitPriceLevel3(float unitPriceLevel3) {
+		this.unitPriceLevel3 = unitPriceLevel3;
+	}
+
+	public float getUnitPriceLevel4() {
+		return unitPriceLevel4;
+	}
+
+	public void setUnitPriceLevel4(float unitPriceLevel4) {
+		this.unitPriceLevel4 = unitPriceLevel4;
 	}
 
 }

@@ -4,38 +4,38 @@
       th:include="layout :: page">
     <head>
         <title>
-        	<th:block th:fragment="titleName">Log In</th:block>
+        	<th:block th:fragment="titleName">Đăng nhập</th:block>
         </title>
     </head>
     <body>
         <div th:fragment="content">
             <div>
-				<h2 class="title is-2">Log In</h2>
+				<h2 class="title is-2">Đăng nhập</h2>
 				<form th:action="@{/authentication/logIn}" th:object="${logInDTO}" method="post">
 					<div class="field">
 						<label class="label">Email:</label>
 						<div class="control">
 					    	<input th:class="${#strings.equals(errEmail, '')} ? 'input' : 'input is-danger'"
 					    		th:field="*{email}"
-					    		type="text" placeholder="Insert your email">
+					    		type="text" placeholder="Nhập email của bạn">
 					  	</div>
 					  	<div th:if="${errEmail != ''}">
-					  		<p class="help is-danger" th:text="${errEmail}" />
+					  		<p class="has-text-danger is-size-7" th:text="${errEmail}" />
 					  	</div>
 					</div>
 					<div class="field">
-						<label class="label">Password:</label>
+						<label class="label">Mật khẩu:</label>
 						<div class="control">
 					    	<input th:class="${#strings.equals(errPassword, '')} ? 'input' : 'input is-danger'"
 					    		th:field="*{password}"
-					    		type="password" placeholder="Insert your password">
+					    		type="password" placeholder="Nhập mật khẩu của bạn">
 					  	</div>
 					  	<div th:if="${errPassword != ''}">
-					  		<p class="help is-danger" th:text="${errPassword}" />
+					  		<p class="has-text-danger is-size-7" th:text="${errPassword}" />
 					  	</div>
 					</div>
 					<div class="field" style="margin-top: 20px">
-						<button class="button is-primary">Log In</button>
+						<button class="button is-primary">Đăng nhập</button>
 					</div>
 				</form>
 			</div>

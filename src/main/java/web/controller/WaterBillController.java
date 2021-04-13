@@ -118,7 +118,7 @@ public class WaterBillController {
 					.findFirst()
 					.orElse(new WaterMeterReading());
 				
-				Pricing pricing = pricingRepository.findOneByTblAddressType(address.getTblAddressType());
+				Pricing pricing = pricingRepository.findOneByTblAddressType(address.getTblAddressType().getId());
 			
 				billDTO.setAddress(address);
 				billDTO.setWaterMeter(foundMeter);
@@ -205,7 +205,7 @@ public class WaterBillController {
 						.findFirst()
 						.orElse(new WaterMeterReading());
 				
-				Pricing pricing = pricingRepository.findOneByTblAddressType(address.getTblAddressType());
+				Pricing pricing = pricingRepository.findOneByTblAddressType(address.getTblAddressType().getId());
 				
 				// if bill is already created, only update
 				// else create new bill

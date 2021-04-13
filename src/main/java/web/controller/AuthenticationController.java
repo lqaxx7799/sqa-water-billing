@@ -73,11 +73,11 @@ public class AuthenticationController {
 		String errEmail = "", errPassword = "";
 		if (email.equals("")) {
 			isValid = false;
-			errEmail = "Email cannot be empty";
+			errEmail = "Vui lòng nhập email";
 		}
 		if (password.equals("")) {
 			isValid = false;
-			errPassword = "Password cannot be empty";
+			errPassword = "Vui lòng nhập mật khẩu";
 		}
 		
 		if (!isValid) {
@@ -88,7 +88,7 @@ public class AuthenticationController {
 		} else {
 			boolean found = accountRepository.existByEmailAndPassword(email, CommonUtils.generateSHA1(password));
 			if (!found) {
-				model.addAttribute("errEmail", "Wrong email or password");
+				model.addAttribute("errEmail", "Sai email hoặc password");
 				model.addAttribute("errPassword", "");
 				model.addAttribute("logInDTO", logInDTO);
 				return "logIn";
@@ -179,6 +179,11 @@ public class AuthenticationController {
 		} else if (registrationDTO.getDateOfBirth().after(new Date())) {
 			isValid = false;
 			errors.put("errDateOfBirth", "Ngày sinh không được trong tương lai");
+		}
+		
+		if (registrationDTO.getStreet().equals("")) {
+			isValid = false;
+			errors.put("errStreet", "Địa chỉ không được để trống");
 		}
 		
 		if (!isValid) {

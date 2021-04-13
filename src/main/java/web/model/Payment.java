@@ -34,6 +34,9 @@ public class Payment implements Serializable {
 
 	@Column(name="payment_type")
 	private String paymentType;
+	
+	@Column(name="otp_code")
+	private String otpCode;
 
 	//bi-directional many-to-one association to WaterBill
 	@ManyToOne
@@ -89,6 +92,14 @@ public class Payment implements Serializable {
 
 	public void setTblWaterBill(WaterBill tblWaterBill) {
 		this.tblWaterBill = tblWaterBill;
+	}
+
+	public String getOtpCode() {
+		return otpCode;
+	}
+
+	public void setOtpCode(String otpCode) {
+		this.otpCode = otpCode;
 	}
 
 }

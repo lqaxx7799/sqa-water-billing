@@ -47,14 +47,82 @@
            					<td th:text="${bill.currentReading}"></td>
            					<td th:text="${bill.previousReading}"></td>
            					<td th:text="${bill.calculatedReading}"></td>
-           					<td></td>
-           					<td></td>
-           					<td></td>
+           					<td>
+           						<div th:each="detailedBillItem: ${bill.detailedBill}" th:text="${detailedBillItem.value}"></div>
+           					</td>
+           					<td>
+           						<div
+           							th:each="detailedBillItem: ${bill.detailedBill}"
+           							th:text="${#numbers.formatDecimal(detailedBillItem.unitPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'"
+           						></div>
+           					</td>
+           					<td>
+           						<div
+           							th:each="detailedBillItem: ${bill.detailedBill}"
+           							th:text="${#numbers.formatDecimal(detailedBillItem.value * detailedBillItem.unitPrice, 0, 'POINT', 0, 'COMMA')} + ' đ'"
+           						></div>
+           					</td>
            				</tr>
            			</tbody>
            		</table>
+           		
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Thành tiền</div>
+           			<div class="column" th:text="${#numbers.formatDecimal(bill.waterBill.amount, 0, 'POINT', 0, 'COMMA')} + ' đ'"></div>
+           		</div>
            	
            	</div>
+           	
+           	<th:block th:if="${bill.waterBill.isPaid}">
+           		<div>
+           			Bạn đã thanh toán hóa đơn này.
+           		</div>
+           	</th:block>
+           	
+           	<th:block th:if="${!payment.confirmed}">
+           		<div>
+           			Vui lòng xác minh thanh toán của bạn qua email.
+           		</div>
+           	</th:block>
+           	
+           	<th:block th:if="${!bill.waterBill.isPaid}">
+           		<div>
+           			<div class="is-size-4">Thanh toán hóa đơn</div>
+           			<form th:object="${payment}" th:action="@{/payment/detail} + '?id=' + ${bill.waterBill.id}" method="post">
+           				<div class="field">
+  							<label class="label">Ngân hàng thanh toán</label>
+  							<div class="control">
+    							<div class="select">
+      								<select th:field="*{paymentType}">
+        								<option value="ACB">Ngân hàng TMCP Á Châu</option>
+        								<option value="VietcomBank">Ngân hàng TMCP Ngoại Thương Việt Nam</option>
+        								<option value="VietinBank">Ngân hàng TMCP Công Thương Việt Nam</option>
+        								<option value="Techcombank">Ngân hàng TMCP Kỹ Thương Việt Nam</option>
+        								<option value="BIDV">Ngân hàng TMCP Đầu Tư Và Phát Triển Việt Nam</option>
+        								<option value="VPBank">Ngân hàng Việt Nam Thịnh Vượng</option>
+        								<option value="Agribank">Ngân hàng Nông nghiệp và Phát triển Việt Nam</option>
+        								<option value="TP Bank">Ngân hàng TMCP Tiên Phong</option>
+        								<option value="MB Bank">Ngân hàng thương mại cổ phần Quân đội</option>
+        								<option value="SCB">Ngân hàng TMCP Sài Gòn</option>
+      								</select>
+    							</div>
+  							</div>
+						</div>
+						<div class="field">
+  							<label class="label">Mã tài khoản</label>
+  							<div class="control">
+    							<input class="input" th:field="*{paymentCode}" type="text" placeholder="Nhập mã tài khoản của bạn">
+    							<span class="has-text-danger is-size-7" th:text="${errors.get('errPaymentCode')}"></span>
+  							</div>
+						</div>
+						<div class="field is-grouped">
+  							<div class="control">
+    							<button class="button is-link">Thanh toán</button>
+  							</div>
+						</div>
+           			</form>
+           		</div>
+           	</th:block>
         </div>
     </body>
 </html>

@@ -18,7 +18,7 @@
 		  					<label class="label">Email</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{email}" type="text" placeholder="Nhập email">
-		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errEmail')}" />
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errEmail')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -30,6 +30,7 @@
 	  						<label class="label">Nhập mật khẩu</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{password}" type="text" placeholder="Nhập mật khẩu">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errPassword')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -38,6 +39,7 @@
 	  						<label class="label">Nhập lại mật khẩu</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{reenterPassword}" type="text" placeholder="Nhập lại mật khẩu">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errReenterPassword')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -51,6 +53,7 @@
 	  						<label class="label">Họ</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{lastName}" type="text" placeholder="Nhập họ">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errLastName')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -59,6 +62,7 @@
 	  						<label class="label">Tên</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{firstName}" type="text" placeholder="Nhập tên">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errFirstName')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -70,6 +74,7 @@
 	  						<label class="label">Số CMT/CCCD</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{idNumber}" type="text" placeholder="Nhập số CMT/CCCD">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errIdNumber')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -78,6 +83,7 @@
 	  						<label class="label">Số điện thoại</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{phoneNumber}" type="text" placeholder="Nhập số điện thoại">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errPhoneNumber')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -95,6 +101,7 @@
 								        <option value="other">Khác</option>
     								</select>
     							</div>
+    							<span class="has-text-danger is-size-7" th:text="${errors.get('errGender')}"></span>
   							</div>
 						</div>
             		</div>
@@ -103,6 +110,7 @@
 	  						<label class="label">Ngày sinh</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{dateOfBirth}" type="date" placeholder="Nhập ngày sinh">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errDateOfBirth')}"></span>
 		  					</div>
 						</div>
             		</div>
@@ -131,6 +139,7 @@
   							<label class="label">Địa chỉ</label>
   							<div class="control">
 		    					<input class="input" th:field="*{street}" type="text" placeholder="Nhập số nhà, tên phố">
+		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errStreet')}"></span>
 		  					</div>
 						</div>
             		</div>

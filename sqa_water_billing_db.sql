@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 11, 2021 at 07:00 PM
+-- Generation Time: Apr 13, 2021 at 06:17 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -100,7 +100,12 @@ CREATE TABLE `tbl_address_type` (
 --
 
 INSERT INTO `tbl_address_type` (`id`, `type`, `description`) VALUES
-(1, 'Hộ gia đình', 'Hộ gia đình');
+(1, 'Hộ gia đình', 'Hộ gia đình'),
+(2, 'Hộ nghèo', 'Hộ nghèo'),
+(3, 'Cơ quan hành chính', 'Cơ quan hành chính'),
+(4, 'Đơn vị sự nghiệp, dịch vụ công cộng', 'Đơn vị sự nghiệp, dịch vụ công cộng'),
+(5, 'Đơn vị sản xuất', 'Đơn vị sản xuất'),
+(6, 'Kinh doanh dịch vụ', 'Kinh doanh dịch vụ');
 
 -- --------------------------------------------------------
 
@@ -234,8 +239,16 @@ CREATE TABLE `tbl_payment` (
   `payment_code` varchar(256) COLLATE utf8_vietnamese_ci NOT NULL,
   `created_at` date NOT NULL,
   `tbl_water_bill_id` int(10) NOT NULL,
-  `confirmed` tinyint(1) NOT NULL
+  `confirmed` tinyint(1) NOT NULL,
+  `otp_code` varchar(16) COLLATE utf8_vietnamese_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_payment`
+--
+
+INSERT INTO `tbl_payment` (`id`, `payment_type`, `payment_code`, `created_at`, `tbl_water_bill_id`, `confirmed`, `otp_code`) VALUES
+(1, 'ACB', '1151151515151', '2021-04-13', 7, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -245,14 +258,27 @@ CREATE TABLE `tbl_payment` (
 
 CREATE TABLE `tbl_pricing` (
   `id` int(10) NOT NULL,
-  `unit_price` float NOT NULL,
   `tbl_address_type_id` int(10) NOT NULL,
   `applied_from` date NOT NULL,
   `applied_to` date DEFAULT NULL,
-  `usage_range_from` float DEFAULT NULL,
-  `usage_range_to` float DEFAULT NULL,
-  `is_applying` tinyint(1) NOT NULL
+  `is_applying` tinyint(1) NOT NULL,
+  `unit_price_level_1` float NOT NULL,
+  `unit_price_level_2` float DEFAULT NULL,
+  `unit_price_level_3` float DEFAULT NULL,
+  `unit_price_level_4` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_vietnamese_ci;
+
+--
+-- Dumping data for table `tbl_pricing`
+--
+
+INSERT INTO `tbl_pricing` (`id`, `tbl_address_type_id`, `applied_from`, `applied_to`, `is_applying`, `unit_price_level_1`, `unit_price_level_2`, `unit_price_level_3`, `unit_price_level_4`) VALUES
+(1, 1, '2021-01-01', '2021-12-31', 1, 5973, 7052, 8669, 15929),
+(2, 2, '2021-01-01', '2021-12-31', 1, 3600, 4500, 5600, 6700),
+(3, 3, '2021-01-01', '2021-12-31', 1, 9955, 9955, 9955, 9955),
+(4, 4, '2021-01-01', '2021-12-31', 1, 9955, 9955, 9955, 9955),
+(5, 5, '2021-01-01', '2021-12-31', 1, 11615, 11615, 11615, 11615),
+(6, 6, '2021-01-01', '2021-12-31', 1, 22068, 22068, 22068, 22068);
 
 -- --------------------------------------------------------
 
@@ -314,7 +340,7 @@ CREATE TABLE `tbl_water_bill` (
 --
 
 INSERT INTO `tbl_water_bill` (`id`, `amount`, `created_at`, `is_paid`, `due_date`, `tbl_water_meter_reading_id`, `handled_employee_id`) VALUES
-(7, 1000, '2021-04-09', 0, '2021-04-16', 6, 1);
+(7, 1331970, '2021-04-09', 1, '2021-04-16', 6, 1);
 
 -- --------------------------------------------------------
 
@@ -370,7 +396,8 @@ INSERT INTO `tbl_water_meter_reading` (`id`, `month`, `year`, `reading_value`, `
 -- Indexes for table `tbl_account`
 --
 ALTER TABLE `tbl_account`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `tbl_address`
@@ -385,7 +412,8 @@ ALTER TABLE `tbl_address`
 -- Indexes for table `tbl_address_type`
 --
 ALTER TABLE `tbl_address_type`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `type` (`type`);
 
 --
 -- Indexes for table `tbl_area`
@@ -406,6 +434,7 @@ ALTER TABLE `tbl_assigned_area`
 --
 ALTER TABLE `tbl_customer`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_number` (`id_number`),
   ADD KEY `FKtbl_custom195669` (`tbl_account_id`);
 
 --
@@ -499,7 +528,7 @@ ALTER TABLE `tbl_address`
 -- AUTO_INCREMENT for table `tbl_address_type`
 --
 ALTER TABLE `tbl_address_type`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tbl_area`
@@ -535,13 +564,13 @@ ALTER TABLE `tbl_manager`
 -- AUTO_INCREMENT for table `tbl_payment`
 --
 ALTER TABLE `tbl_payment`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_pricing`
 --
 ALTER TABLE `tbl_pricing`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tbl_province`

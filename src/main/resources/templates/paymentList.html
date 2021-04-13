@@ -33,7 +33,7 @@
             				<td th:text="${bill.tblWaterMeterReading.tblWaterMeter.tblAddress.tblAddressType.type}" />
             				<td th:text="${bill.tblWaterMeterReading.month} + '/' + ${bill.tblWaterMeterReading.year}" />
             				<td th:text="${bill.tblWaterMeterReading.calculatedValue}" />
-            				<td th:text="${bill.amount}" />
+            				<td th:text="${#numbers.formatDecimal(bill.amount, 0, 'POINT', 0, 'COMMA')} + ' đ'" />
             				<td th:text="${bill.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}" />
             				<td>
             					<th:block th:if="${!bill.isPaid}">        					
