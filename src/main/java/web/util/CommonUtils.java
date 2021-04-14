@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import web.model.Pricing;
@@ -107,6 +108,16 @@ public class CommonUtils {
 			}
 		}
 		return amount;
+	}
+	
+	public static String generateRandomCode(int length) {
+		String result = "";
+		Random rand = new Random();   
+		for (int i = 0; i < length; i++) {
+			int num = rand.nextInt(10);     
+			result += num;
+		}
+		return result;
 	}
 
 }

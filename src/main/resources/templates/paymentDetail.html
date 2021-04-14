@@ -73,15 +73,18 @@
            	
            	</div>
            	
-           	<th:block th:if="${bill.waterBill.isPaid}">
+           	<th:block th:if="${bill.waterBill.isPaid && payment.confirmed}">
            		<div>
            			Bạn đã thanh toán hóa đơn này.
            		</div>
            	</th:block>
            	
-           	<th:block th:if="${!payment.confirmed}">
+           	<th:block th:if="${bill.waterBill.isPaid && !payment.confirmed}">
            		<div>
-           			Vui lòng xác minh thanh toán của bạn qua email.
+           			Mã OTP đã được gửi đến email của bạn. Vui lòng điền mã OTP để hoàn thành thanh toán. Nếu bạn không nhận được email, nhấn
+           			<a id="linkEmail">vào đây</a> để gửi lại email.
+           			<input name="otpCode" id="txtOtpCode" type="text" placeholder="Nhập mã OTP" class="input mt-3" style="width: 300px;" />
+           			<button id="btnFinish" class="button is-info mt-3">Thanh toán</button>
            		</div>
            	</th:block>
            	
@@ -123,6 +126,50 @@
            			</form>
            		</div>
            	</th:block>
+           	
+           	<script th:inline="javascript">
+            	$(document).ready(function() {
+            		$(document).on('click', '#linkEmail', function(e) {
+            			e.preventDefault();
+            			
+            			$.ajax({
+            				url: '/payment/resendOTP?id=' + [[${payment.id}]],
+            				type: 'GET',
+            				success: function(res) {
+            					if (res.success) {
+            						toastr.info('Gửi mã OTP thành công.');
+            					} else {
+            						toastr.error('Có lỗi xảy ra trong quá trình gửi email. Xin vui lòng thử lại sau.');
+            					}
+            				},
+            				error: function(err) {
+            					toastr.error('Có lỗi xảy ra trong quá trình gửi email. Xin vui lòng thử lại sau.');
+            				}
+            			})
+            		});
+            		
+            		$(document).on('click', '#btnFinish', function(e) {
+            			e.preventDefault();
+            			const otpCode = $('#txtOtpCode').val();
+            			$.ajax({
+            				url: '/payment/finishPayment?id=' + [[${payment.id}]] + '&otpCode=' + otpCode,
+            				type: 'POST',
+            				success: function(res) {
+            					if (res.success) {
+									window.location.reload();
+            					} else {
+            						toastr.error(res.error);
+            					}
+            				},
+            				error: function(res) {
+            					console.log(res)
+            					toastr.error(res.responseJSON.error);
+            				}
+            			})
+            		});
+            		
+            	});
+            </script>
         </div>
     </body>
 </html>

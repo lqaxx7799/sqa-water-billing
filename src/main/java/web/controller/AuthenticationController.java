@@ -124,7 +124,7 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/registration")
-	public String submitRegistration(@ModelAttribute RegistrationDTO registrationDTO, Model model) {
+	public String submitRegistration(@ModelAttribute RegistrationDTO registrationDTO, Model model) throws AddressException, MessagingException {
 		Map<String, String> errors = new LinkedHashMap<>();
 		boolean isValid = true;
 		
@@ -262,9 +262,10 @@ public class AuthenticationController {
 		waterMeter.setTblAddress(address);
 		waterMeterRepository.save(waterMeter);
 		
-//		[TODO]: Send validate email
-		String mailBody = "<div>Xin vui lòng nhấn vào liên kết sau để xác thực tài khoản của bạn</div>";
+		String mailBody = "<div>";
+		mailBody += "<div>Xin vui lòng nhấn vào liên kết sau để xác thực tài khoản của bạn</div>";
 		mailBody += "<a href='http://localhost:8080/validate?email="+ registrationDTO.getEmail() +"' target='_blank'>Xác thực</a>";
+		mailBody += "</div>";
 		EmailService.sendMail(registrationDTO.getEmail(), "Xác thực tài khoản của bạn", "Xác thực tài khoản của bạn", mailBody);
 		
 		return "redirect:/";
@@ -293,7 +294,7 @@ public class AuthenticationController {
 		waterMeter.setIsActive(true);
 		waterMeterRepository.save(waterMeter);
 
-		return "redirect:/";
+		return "redirect:/account/detail";
 	}
 	
 	@GetMapping("/logOut")

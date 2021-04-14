@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:include="layout :: page">
+    <head>
+        <title>
+        	<th:block th:fragment="titleName">Home</th:block>
+        </title>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <div class="is-size-2">Thông tin tài khoản</div>
+            
+            <th:block th:if="${customer.isVerified}">
+	            <div>Tài khoản của bạn đã được xác thực.</div>
+            </th:block>
+            <th:block th:if="${!customer.isVerified}">
+	            <div class="box">
+	            	<div>Bạn chưa xác thực tài khoản. Vui lòng kiểm tra email của bạn để xác thực.</div>
+	            	<div>Nếu bạn không nhận được email, nhấn <a id="linkEmail">vào đây</a> để gửi lại.</div>
+	            </div>
+            </th:block>
+            
+            <script th:inline="javascript">
+            	$(document).ready(function() {
+            		$(document).on('click', '#linkEmail', function(e) {
+            			e.preventDefault();
+            			
+            			$.ajax({
+            				url: '/account/resendEmail?id=' + [[${customer.id}]],
+            				type: 'GET',
+            				success: function(res) {
+            					if (res.success) {
+            						toastr.info('Gửi email thành công.');
+            					} else {
+            						toastr.error('Có lỗi xảy ra trong quá trình gửi email. Xin vui lòng thử lại sau.');
+            					}
+            				},
+            				error: function(err) {
+            					toastr.error('Có lỗi xảy ra trong quá trình gửi email. Xin vui lòng thử lại sau.');
+            				}
+            			})
+            		});
+            		
+            	});
+            </script>
+        </div>
+    </body>
+</html>
