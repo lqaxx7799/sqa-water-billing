@@ -17,7 +17,7 @@
 				    	<div class="select">
 				      		<select name="wardId">
 			            		<th:block th:each="area: ${assignedAreas}">
-			            			<option th:value="${area.id}" th:text="${area.wardName}" />
+			            			<option th:value="${area.id}" th:text="${area.wardName}" th:selected="${area.id == wardId ? 'selected' : ''}" />
 			            		</th:block>
 			            	</select>
 				    	</div>
@@ -31,7 +31,7 @@
 				</div>
             </form>
             <th:block th:if="${readings != null && #lists.size(readings) != 0}">
-            	<div id="lblIsTouched" style="display: none;"><span class="tag is-info">Đã chỉnh sửa</span></div>
+            	<div id="lblIsTouched" style="display: none;"><span class="tag is-info my-3">Đã chỉnh sửa</span></div>
             	<table class="table">
             		<thead>
             			<tr>
@@ -48,9 +48,9 @@
             			<tr class="readingRow" th:each="reading, iter: ${readings}" th:attr="data-waterMeterId=${reading.waterMeter.id}">
             				<td th:text="${iter.index + 1}" />
             				<td th:text="${reading.waterMeter.id}" />
-            				<td th:text="${reading.customer.firstName}" />
-            				<td th:text="${reading.address.houseNumber}" />
-            				<td th:text="${reading.previousReading.readingValue}" />
+            				<td th:text="${reading.customer.lastName} + ' ' + ${reading.customer.firstName}" />
+            				<td th:text="${reading.address.street}" />
+            				<td class="column-previous-reading" th:text="${reading.previousReading.readingValue}" />
             				<td
             					class="column-current-reading"
             					data-state="view"
@@ -58,7 +58,8 @@
             					th:text="${reading.currentReading.readingValue}"
            					/>
             				<td
-            					th:text="${reading.currentReading.readingValue} ? ${reading.currentReading.readingValue - reading.previousReading.readingValue} : 0"
+            					class="column-calculated-reading"
+            					th:text="${reading.currentReading.calculatedValue}"
             				/>
             			</tr>
             		</tbody>
@@ -89,9 +90,10 @@
 	        			}
 	        			const waterMeterId = $(this).attr('data-waterMeterId');
 	        			const value = $(this).val();
-	        			const targetElem = $(`td[data-waterMeterId='${waterMeterId}']`);
+	        			const targetElem = $(`td[class=column-current-reading][data-waterMeterId='${waterMeterId}']`);
 	        			targetElem.text(value);
 	        			targetElem.attr('data-state', 'view');
+	        			targetElem.removeClass('has-background-danger-light');
 	        			isTouched = true;
 	        			$('#lblIsTouched').css('display', 'block');
         			});
@@ -101,15 +103,40 @@
 	        				toastr['warning']('Không có thay đổi!');
 	        				return;
 	        			}
+	        			
+	        			const errorRows = [];
 	        			const data = [];
 	        			$('.readingRow').each(function(index) {
 	        				const waterMeterId = parseInt($(this).attr('data-waterMeterId'));
+	        				const previousValue = parseInt($(this).find('.column-previous-reading').text());
 	        				const readingValue = parseInt($(this).find('.column-current-reading').text());
+	        				
+	        				if (isNaN(readingValue)) {
+	        					errorRows.push({
+	        						waterMeterId,
+	        						error: 'invalidFormat',
+	        					});
+	        				} else if (readingValue < previousValue) {
+	        					errorRows.push({
+	        						waterMeterId,
+	        						error: 'invalidValue',
+	        					});
+	        				}
 	        				data.push({
 	        					waterMeterId,
 	        					readingValue,
         					});
 	        			});
+	        			
+	        			console.log(errorRows)
+	        			
+	        			if (errorRows.length > 0) {
+	        				errorRows.forEach(function (error, index) {        					
+		        				$('td[class=column-current-reading][data-waterMeterId=' + error.waterMeterId + ']').addClass('has-background-danger-light');
+	        				});
+	        				return;
+	        			}
+	        			
 	        			$.ajax({
 	        				type: 'POST',
 	        				url: '/reading/update',
@@ -119,12 +146,25 @@
 	    	                success: function(res) {
 	    	                	console.log(res)
 	    	                	toastr.success('Cập nhật số nước thành công.')
+	    	                	isTouched = false;
+	    	                	$('#lblIsTouched').css('display', 'none');
+    	                		$('.readingRow').each(function(index) {
+    		        				const previousValue = parseInt($(this).find('.column-previous-reading').text());
+    		        				const readingValue = parseInt($(this).find('.column-current-reading').text());
+    		        				
+    		        				$(this).find('.column-calculated-reading').text(readingValue - previousValue);
+    		        			});
+	
 	    	                },
 	    	                error: function(res) {
 	    	                	toastr.error('Có lỗi đã xảy ra trong quá trình cập nhật. Xin vui lòng thử lại sau.');
 	    	                },
 	        			});
 	        		});
+	        		
+	        		$(document).on('click', '#btnCancel', function(e) {
+	        			window.location.reload();
+	        		})
 	        	});
 	        </script>
         </div>

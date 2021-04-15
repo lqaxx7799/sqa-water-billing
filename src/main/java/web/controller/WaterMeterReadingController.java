@@ -122,6 +122,7 @@ public class WaterMeterReadingController {
 				
 				return readingDTO;
 			})
+			.filter((reading) -> reading.getWaterMeter().getIsActive())
 			.collect(Collectors.toList());
 		
 		model.addAttribute("readings", readings);
