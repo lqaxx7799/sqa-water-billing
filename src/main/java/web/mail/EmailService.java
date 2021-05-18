@@ -26,12 +26,13 @@ public class EmailService {
 
 		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("sqa.n2.dt3@gmail.com", "cwmnvgfrxdhwjuvc");
+				return new PasswordAuthentication("lqaxx000@gmail.com", "mryxicgrnpenzqil");
+//				return new PasswordAuthentication("sqa.n2.dt3@gmail.com", "cwmnvgfrxdhwjuvc");
 //				return new PasswordAuthentication("sqa.n2.dt3@gmail.com", "SQA_n2_pass_dt3");
 			}
 		});
 		Message msg = new MimeMessage(session);
-		msg.setFrom(new InternetAddress("sqa.n2.dt3@gmail.com", false));
+		msg.setFrom(new InternetAddress("lqaxx000@gmail.com", false));
 
 		msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
 		msg.setSubject(subject);

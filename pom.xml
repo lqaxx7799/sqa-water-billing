@@ -15,6 +15,7 @@
 	<description>SQA Water Billing Website</description>
 	<properties>
 		<java.version>11</java.version>
+	 	<start-class>web.SqaWaterBillingApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>

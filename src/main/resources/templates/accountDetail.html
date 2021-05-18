@@ -11,6 +11,37 @@
         <div th:fragment="content">
             <div class="is-size-2">Thông tin tài khoản</div>
             
+            <div class="box">
+            	<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Họ tên</div>
+           			<div class="column" th:text="${customer.lastName + ' ' + customer.firstName}"></div>
+           		</div>
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Email</div>
+           			<div class="column" th:text="${customer.tblAccount.email}"></div>
+           		</div>
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Số điện thoại</div>
+           			<div class="column" th:text="${customer.phoneNumber}"></div>
+           		</div>
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Ngày sinh</div>
+           			<div class="column" th:text="${customer.dateOfBirth}"></div>
+           		</div>
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Giới tính</div>
+           			<div class="column" th:text="${customer.gender == 'male' ? 'Nam' : customer.gender == 'female' ? 'Nữ' : 'Khác'}"></div>
+           		</div>
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Số CMT/CCCD</div>
+           			<div class="column" th:text="${customer.idNumber}"></div>
+           		</div>
+           		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Địa chỉ</div>
+           			<div class="column" th:text="${customer.tblAddresses.get(0).street + ', ' + customer.tblAddresses.get(0).tblWard.wardName + ', ' + customer.tblAddresses.get(0).tblWard.tblDistrict.districtName + ', ' + customer.tblAddresses.get(0).tblWard.tblDistrict.tblProvince.provinceName}"></div>
+           		</div>
+            </div>
+            
             <th:block th:if="${customer.isVerified}">
 	            <div>Tài khoản của bạn đã được xác thực.</div>
             </th:block>

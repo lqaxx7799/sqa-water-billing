@@ -12,6 +12,11 @@
         	<div class="is-size-2">Chi tiết hóa đơn</div>
            	<div class="box">
            		<div class="columns">
+           			<div class="column is-one-fifth has-text-weight-bold">Mã hóa đơn</div>
+           			<div class="column" th:text="${bill.waterBill.id}"></div>
+           		</div>
+
+           		<div class="columns">
            			<div class="column is-one-fifth has-text-weight-bold">Tên khách hàng</div>
            			<div class="column" th:text="${bill.customerName}"></div>
            		</div>
