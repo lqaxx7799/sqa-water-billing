@@ -128,17 +128,17 @@ public class AuthenticationController {
 		Map<String, String> errors = new LinkedHashMap<>();
 		boolean isValid = true;
 		
-		if (registrationDTO.getLastName().equals("")) {
+		if (registrationDTO.getLastName() == null || registrationDTO.getLastName().equals("")) {
 			isValid = false;
 			errors.put("errLastName", "Họ không được để trống");
 		}
 		
-		if (registrationDTO.getFirstName().equals("")) {
+		if (registrationDTO.getFirstName() == null || registrationDTO.getFirstName().equals("")) {
 			isValid = false;
 			errors.put("errFirstName", "Tên không được để trống");
 		}
 		
-		if (registrationDTO.getEmail().equals("")) {
+		if (registrationDTO.getEmail() == null || registrationDTO.getEmail().equals("")) {
 			isValid = false;
 			errors.put("errEmail", "Email không được để trống");
 		} else if (!CommonUtils.checkEmailFormat(registrationDTO.getEmail())) {
@@ -152,12 +152,12 @@ public class AuthenticationController {
 			}
 		}
 		
-		if (registrationDTO.getPassword().equals("")) {
+		if (registrationDTO.getPassword() == null || registrationDTO.getPassword().equals("")) {
 			isValid = false;
 			errors.put("errPassword", "Mật khẩu không được để trống");
 		}
 		
-		if (registrationDTO.getReenterPassword().equals("")) {
+		if (registrationDTO.getReenterPassword() == null || registrationDTO.getReenterPassword().equals("")) {
 			isValid = false;
 			errors.put("errReenterPassword", "Vui lòng nhập lại mật khẩu");
 		} else if (!registrationDTO.getReenterPassword().equals(registrationDTO.getPassword())) {
@@ -165,7 +165,7 @@ public class AuthenticationController {
 			errors.put("errReenterPassword", "Mật khẩu không khớp");
 		}
 		
-		if (registrationDTO.getIdNumber().equals("")) {
+		if (registrationDTO.getIdNumber() == null || registrationDTO.getIdNumber().equals("")) {
 			isValid = false;
 			errors.put("errIdNumber", "CMT/CCCD không được để trống");
 		} else if (!CommonUtils.checkIdNumberFormat(registrationDTO.getIdNumber())) {
@@ -173,7 +173,7 @@ public class AuthenticationController {
 			errors.put("errIdNumber", "CMT/CCCD có 9 hoặc 12 số");
 		}
 		
-		if (registrationDTO.getPhoneNumber().equals("")) {
+		if (registrationDTO.getPhoneNumber() == null || registrationDTO.getPhoneNumber().equals("")) {
 			isValid = false;
 			errors.put("errPhoneNumber", "Số điện thoại không được để trống");
 		}
@@ -186,7 +186,7 @@ public class AuthenticationController {
 			errors.put("errDateOfBirth", "Ngày sinh không được trong tương lai");
 		}
 		
-		if (registrationDTO.getStreet().equals("")) {
+		if (registrationDTO.getStreet() == null || registrationDTO.getStreet().equals("")) {
 			isValid = false;
 			errors.put("errStreet", "Địa chỉ không được để trống");
 		}
@@ -194,7 +194,7 @@ public class AuthenticationController {
 		if (!isValid) {
 			List<AddressType> addressTypes = addressTypeRepository.findAll();
 			List<Province> provinces = provinceRepository.findAll();
-			Province selectedProvince = registrationDTO.getProvinceId() == 0
+			Province selectedProvince = provinces.size() == 0 ? null : registrationDTO.getProvinceId() == 0
 					? provinces.get(0)
 					: provinces
 						.stream()
@@ -202,7 +202,7 @@ public class AuthenticationController {
 						.findFirst()
 						.get();
 			List<District> districts = districtRepository.findByTblProvince(selectedProvince);
-			District selectedDistrict = registrationDTO.getDistrictId() == 0
+			District selectedDistrict = districts.size() == 0 ? null : registrationDTO.getDistrictId() == 0
 					? districts.get(0)
 					: districts
 						.stream()

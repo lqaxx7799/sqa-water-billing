@@ -45,7 +45,12 @@ public class CommonUtils {
 	}
 
 	public static boolean checkDateFormat(String input, String format) {
-		DateFormat df = new SimpleDateFormat(format);
+		DateFormat df;
+		try {			
+			df = new SimpleDateFormat(format);
+		} catch (Exception e) {
+			return false;
+		}
 		df.setLenient(false);
 		try {
 			df.parse(input);

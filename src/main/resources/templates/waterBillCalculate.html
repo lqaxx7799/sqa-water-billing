@@ -17,7 +17,7 @@
 				    	<div class="select">
 				      		<select name="wardId">
 			            		<th:block th:each="area: ${assignedAreas}">
-			            			<option th:value="${area.id}" th:text="${area.wardName}" />
+			            			<option th:value="${area.id}" th:text="${area.wardName}" th:selected="${area.id == wardId ? 'selected' : ''}" />
 			            		</th:block>
 			            	</select>
 				    	</div>

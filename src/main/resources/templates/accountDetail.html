@@ -38,7 +38,10 @@
            		</div>
            		<div class="columns">
            			<div class="column is-one-fifth has-text-weight-bold">Địa chỉ</div>
-           			<div class="column" th:text="${customer.tblAddresses.get(0).street + ', ' + customer.tblAddresses.get(0).tblWard.wardName + ', ' + customer.tblAddresses.get(0).tblWard.tblDistrict.districtName + ', ' + customer.tblAddresses.get(0).tblWard.tblDistrict.tblProvince.provinceName}"></div>
+           			<th:block th:if="${customer.tblAddresses != null} and ${#lists.size(customer.tblAddresses) > 0}">           			
+	           			<div class="column" th:text="${customer.tblAddresses.get(0).street + ', ' + customer.tblAddresses.get(0).tblWard.wardName + ', ' + customer.tblAddresses.get(0).tblWard.tblDistrict.districtName + ', ' + customer.tblAddresses.get(0).tblWard.tblDistrict.tblProvince.provinceName}"></div>
+           			</th:block>           			
+          
            		</div>
             </div>
             
