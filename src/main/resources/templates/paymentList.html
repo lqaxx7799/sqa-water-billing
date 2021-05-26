@@ -28,13 +28,13 @@
             		<tbody>
             			<tr class="readingRow" th:each="bill, iter: ${bills}">
             				<td th:text="${iter.index + 1}" />
-            				<td th:text="${bill.tblWaterMeterReading.tblWaterMeter.id}" />
-            				<td th:text="${bill.tblWaterMeterReading.tblWaterMeter.tblAddress.street}" />
-            				<td th:text="${bill.tblWaterMeterReading.tblWaterMeter.tblAddress.tblAddressType.type}" />
-            				<td th:text="${bill.tblWaterMeterReading.month} + '/' + ${bill.tblWaterMeterReading.year}" />
-            				<td th:text="${bill.tblWaterMeterReading.calculatedValue}" />
+            				<td th:text="${bill?.tblWaterMeterReading?.tblWaterMeter?.id}" />
+            				<td th:text="${bill?.tblWaterMeterReading?.tblWaterMeter?.tblAddress?.street}" />
+            				<td th:text="${bill?.tblWaterMeterReading?.tblWaterMeter?.tblAddress?.tblAddressType?.type}" />
+            				<td th:text="${bill?.tblWaterMeterReading?.month} + '/' + ${bill?.tblWaterMeterReading?.year}" />
+            				<td th:text="${bill?.tblWaterMeterReading?.calculatedValue}" />
             				<td th:text="${#numbers.formatDecimal(bill.amount, 0, 'POINT', 0, 'COMMA')} + ' đ'" />
-            				<td th:text="${bill.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}" />
+            				<td th:text="${bill?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}" />
             				<td>
             					<th:block th:if="${!bill.isPaid}">        					
 	            					<a class="button is-info" th:href="@{'/payment/detail?id=' + ${bill.id}}">Thanh toán</a>

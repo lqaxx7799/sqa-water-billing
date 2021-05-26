@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import web.model.District;
 import web.model.Province;
@@ -28,9 +30,9 @@ public class WardController {
 	private DistrictRepository districtRepository;
 	
 	@GetMapping(value = "/getByDistrictId", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Ward>> getWardsByDistrictId(@Param("districtId") String districtId) {
-		int districtIdInt = Integer.parseInt(districtId);
-		District district = districtRepository.findById(districtIdInt).orElse(null);
+	public ResponseEntity<?> getWardsByDistrictId(@Param("districtId") Integer districtId) {
+		
+		District district = districtRepository.findById(districtId).orElse(null);
 		if (district == null) {
 			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 		}
