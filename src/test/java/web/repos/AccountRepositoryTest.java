@@ -36,7 +36,7 @@ public class AccountRepositoryTest {
 	}
 
 	@Test
-    public void find_account_by_id() {
+    public void insert_account() {
         Account account = new Account();
         account.setEmail("test@gmail.com");
         account.setPassword(CommonUtils.generateSHA1("abcd1234"));

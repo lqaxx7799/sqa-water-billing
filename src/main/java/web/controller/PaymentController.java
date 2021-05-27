@@ -116,8 +116,6 @@ public class PaymentController {
 				address.getTblWard().getTblDistrict().getTblProvince().getProvinceName()
 				);
 		
-		
-		
 		WaterBillDTO billDTO = new WaterBillDTO();
 		billDTO.setWaterBill(bill);
 		billDTO.setAddress(addressStr);

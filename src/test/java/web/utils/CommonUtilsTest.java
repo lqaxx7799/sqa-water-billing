@@ -3,10 +3,13 @@ package web.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import web.util.CommonUtils;
 
 @SpringBootTest
+@ContextConfiguration(classes = CommonUtils.class, loader = AnnotationConfigContextLoader.class)
 public class CommonUtilsTest {
 	@Test
 	public void getPreviousPeriod_test_1() {

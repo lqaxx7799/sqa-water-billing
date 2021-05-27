@@ -31,7 +31,11 @@ public class WardController {
 	
 	@GetMapping(value = "/getByDistrictId", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getWardsByDistrictId(@Param("districtId") Integer districtId) {
-		
+		if (districtId == null) {
+			Map<String, String> errors = new LinkedHashMap<>();
+			errors.put("message", "districtId cannot be empty");
+			return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+		}
 		District district = districtRepository.findById(districtId).orElse(null);
 		if (district == null) {
 			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
