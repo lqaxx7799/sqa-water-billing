@@ -45,21 +45,21 @@
             			</tr>
             		</thead>
             		<tbody>
-            			<tr class="readingRow" th:each="reading, iter: ${readings}" th:attr="data-waterMeterId=${reading.waterMeter.id}">
+            			<tr class="readingRow" th:each="reading, iter: ${readings}" th:attr="data-waterMeterId=${reading?.waterMeter?.id}">
             				<td th:text="${iter.index + 1}" />
-            				<td th:text="${reading.waterMeter.id}" />
-            				<td th:text="${reading.customer.lastName} + ' ' + ${reading.customer.firstName}" />
-            				<td th:text="${reading.address.street}" />
-            				<td class="column-previous-reading" th:text="${reading.previousReading.readingValue}" />
+            				<td th:text="${reading?.waterMeter?.id}" />
+            				<td th:text="${reading?.customer?.lastName} + ' ' + ${reading?.customer?.firstName}" />
+            				<td th:text="${reading?.address?.street}" />
+            				<td class="column-previous-reading" th:text="${reading?.previousReading?.readingValue}" />
             				<td
             					class="column-current-reading"
             					data-state="view"
-            					th:attr="data-waterMeterId=${reading.waterMeter.id}"
-            					th:text="${reading.currentReading.readingValue}"
+            					th:attr="data-waterMeterId=${reading?.waterMeter?.id}"
+            					th:text="${reading?.currentReading?.readingValue}"
            					/>
             				<td
             					class="column-calculated-reading"
-            					th:text="${reading.currentReading.calculatedValue}"
+            					th:text="${reading?.currentReading?.calculatedValue}"
             				/>
             			</tr>
             		</tbody>

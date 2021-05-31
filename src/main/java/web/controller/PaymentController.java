@@ -111,9 +111,9 @@ public class PaymentController {
 		String addressStr = String.format(
 				"%s, %s, %s, %s",
 				address.getStreet(),
-				address.getTblWard().getWardName(),
-				address.getTblWard().getTblDistrict().getDistrictName(),
-				address.getTblWard().getTblDistrict().getTblProvince().getProvinceName()
+				address.getTblWard() != null ? address.getTblWard().getWardName() : "",
+				address.getTblWard() != null && address.getTblWard().getTblDistrict() != null ? address.getTblWard().getTblDistrict().getDistrictName() : "",
+				address.getTblWard() != null && address.getTblWard().getTblDistrict() != null && address.getTblWard().getTblDistrict().getTblProvince() != null ? address.getTblWard().getTblDistrict().getTblProvince().getProvinceName() : ""
 				);
 		
 		WaterBillDTO billDTO = new WaterBillDTO();
@@ -205,9 +205,9 @@ public class PaymentController {
 		String addressStr = String.format(
 				"%s, %s, %s, %s",
 				address.getStreet(),
-				address.getTblWard().getWardName(),
-				address.getTblWard().getTblDistrict().getDistrictName(),
-				address.getTblWard().getTblDistrict().getTblProvince().getProvinceName()
+				address.getTblWard() != null ? address.getTblWard().getWardName() : "",
+				address.getTblWard() != null && address.getTblWard().getTblDistrict() != null ? address.getTblWard().getTblDistrict().getDistrictName() : "",
+				address.getTblWard() != null && address.getTblWard().getTblDistrict() != null && address.getTblWard().getTblDistrict().getTblProvince() != null ? address.getTblWard().getTblDistrict().getTblProvince().getProvinceName() : ""
 				);
 		
 		WaterBillDTO billDTO = new WaterBillDTO();

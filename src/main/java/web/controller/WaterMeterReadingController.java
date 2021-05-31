@@ -78,7 +78,7 @@ public class WaterMeterReadingController {
 			return "waterReadingList";
 		}
 		
-		Ward ward = wardRepository.findById(wardId).get();
+		Ward ward = wardRepository.findById(wardId).orElse(null);
 		List<Address> addresses = addressRepository.findByTblWard(ward);
 		
 		Calendar today = Calendar.getInstance();
