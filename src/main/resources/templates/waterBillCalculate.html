@@ -46,23 +46,23 @@
             			</tr>
             		</thead>
             		<tbody>
-            			<tr class="readingRow" th:each="bill, iter: ${bills}" th:attr="data-waterMeterId=${bill.waterMeter.id}">
+            			<tr class="readingRow" th:each="bill, iter: ${bills}" th:attr="data-waterMeterId=${bill?.waterMeter?.id}">
             				<td th:text="${iter.index + 1}" />
-            				<td th:text="${bill.waterMeter.id}" />
-            				<td th:text="${bill.customer.firstName}" />
-            				<td th:text="${bill.address.street}" />
-            				<td th:text="${bill.address.tblAddressType.type}" />
-            				<td th:text="${bill.previousReading.readingValue}" />
+            				<td th:text="${bill?.waterMeter?.id}" />
+            				<td th:text="${bill?.customer?.firstName}" />
+            				<td th:text="${bill?.address?.street}" />
+            				<td th:text="${bill?.address?.tblAddressType?.type}" />
+            				<td th:text="${bill?.previousReading?.readingValue}" />
             				<td
             					class="column-current-bill"
             					data-state="view"
-            					th:attr="data-waterMeterId=${bill.waterMeter.id}"
-            					th:text="${bill.currentReading.readingValue}"
+            					th:attr="data-waterMeterId=${bill?.waterMeter?.id}"
+            					th:text="${bill?.currentReading?.readingValue}"
            					/>
             				<td
-            					th:text="${bill.currentReading.readingValue} ? ${bill.currentReading.readingValue - bill.previousReading.readingValue} : 0"
+            					th:text="${bill?.currentReading?.readingValue} ? ${bill?.currentReading?.readingValue - bill?.previousReading?.readingValue} : 0"
             				/>
-            				<td th:text="${#numbers.formatDecimal(bill.cost, 0, 'POINT', 0, 'COMMA')} + 'đ'" />
+            				<td th:text="${#numbers.formatDecimal(bill?.cost, 0, 'POINT', 0, 'COMMA')} + 'đ'" />
             			</tr>
             		</tbody>
             	</table>
