@@ -130,31 +130,31 @@ public class AuthenticationController {
 		
 		if (registrationDTO.getLastName() == null || registrationDTO.getLastName().equals("")) {
 			isValid = false;
-			errors.put("errLastName", "Họ không được để trống");
+			errors.put("errLastName", "Họ không được để trống. Ví dụ: Nguyễn Quang");
 		}
 		
 		if (registrationDTO.getFirstName() == null || registrationDTO.getFirstName().equals("")) {
 			isValid = false;
-			errors.put("errFirstName", "Tên không được để trống");
+			errors.put("errFirstName", "Tên không được để trống. Ví dụ: Anh");
 		}
 		
 		if (registrationDTO.getEmail() == null || registrationDTO.getEmail().equals("")) {
 			isValid = false;
-			errors.put("errEmail", "Email không được để trống");
+			errors.put("errEmail", "Email không được để trống. Ví dụ: lamquocanh@gmail.com");
 		} else if (!CommonUtils.checkEmailFormat(registrationDTO.getEmail())) {
 			isValid = false;
-			errors.put("errEmail", "Định dạng email không hợp lệ");
+			errors.put("errEmail", "Định dạng email không hợp lệ. Ví dụ: doanhoanganh@gmail.com, nguyenngocanh@yahoo.com");
 		} else {
 			Account existedAccount = accountRepository.findOneByEmail(registrationDTO.getEmail());
 			if (existedAccount != null) {
 				isValid = false;
-				errors.put("errEmail", "Email đã tồn tại");
+				errors.put("errEmail", "Email đã tồn tại. Vui lòng thử email khác");
 			}
 		}
 		
 		if (registrationDTO.getPassword() == null || registrationDTO.getPassword().equals("")) {
 			isValid = false;
-			errors.put("errPassword", "Mật khẩu không được để trống");
+			errors.put("errPassword", "Mật khẩu không được để trống. Ví dụ: 1234567");
 		}
 		
 		if (registrationDTO.getReenterPassword() == null || registrationDTO.getReenterPassword().equals("")) {
@@ -175,8 +175,7 @@ public class AuthenticationController {
 		
 		if (registrationDTO.getPhoneNumber() == null || registrationDTO.getPhoneNumber().equals("")) {
 			isValid = false;
-			errors.put("errPhoneNumber", "Số điện thoại không được để trống");
-		}
+			errors.put("errPhoneNumber", "Số điện thoại không được để trống. Ví dụ: 0987654321");		}
 		
 		if (registrationDTO.getDateOfBirth() == null) {
 			isValid = false;

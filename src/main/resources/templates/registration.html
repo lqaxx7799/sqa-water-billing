@@ -15,7 +15,7 @@
             	<div class="columns">
             		<div class="column is-half">
 	            		<div class="field">
-		  					<label class="label">Email</label>
+		  					<label class="label">Email (@gmail.com, @yahoo.com, ...)</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{email}" type="text" placeholder="Nhập email">
 		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errEmail')}"></span>
@@ -71,7 +71,7 @@
             	<div class="columns">
             		<div class="column is-half">
 	            		<div class="field">
-	  						<label class="label">Số CMT/CCCD</label>
+	  						<label class="label">Số CMT/CCCD (9 hoặc 12 số)</label>
 		  					<div class="control">
 		    					<input class="input" th:field="*{idNumber}" type="text" placeholder="Nhập số CMT/CCCD">
 		    					<span class="has-text-danger is-size-7" th:text="${errors.get('errIdNumber')}"></span>
